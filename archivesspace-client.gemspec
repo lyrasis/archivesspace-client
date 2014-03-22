@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name          = "archivesspace-client"
   spec.version       = Archivesspace::Version::VERSION
   spec.authors       = ["Mark Cooper"]
-  spec.email         = ["markchristophercooper@gmail.com"]
+  spec.email         = ["mark.c.cooper@outlook.com"]
   spec.summary       = %q{Interact with ArchivesSpace via its RESTful API.}
   spec.description   = %q{Interact with ArchivesSpace via its RESTful API.}
   spec.homepage      = ""
