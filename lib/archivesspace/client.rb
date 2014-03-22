@@ -27,7 +27,7 @@ module ArchivesSpace
     use RC::CommonLogger, method(:puts)
   end
 
-  class Group < OpenStruct
+  class Group      < OpenStruct
   end
 
   class Permission < OpenStruct
@@ -36,10 +36,10 @@ module ArchivesSpace
   class Repository < OpenStruct
   end
 
-  class Subject < OpenStruct
+  class Subject    < OpenStruct
   end  
 
-  class User < OpenStruct
+  class User       < OpenStruct
   end  
 
   class Client
