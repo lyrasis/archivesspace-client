@@ -9,7 +9,7 @@ Installation
 Add this line to your application's Gemfile:
 
 ```
-gem 'archivesspace-client', :git => "git@github.com:mark-cooper/archivesspace-client.git"
+gem 'archivesspace-client', :git => "https://github.com/mark-cooper/archivesspace-client.git"
 ```
 
 And then execute:
