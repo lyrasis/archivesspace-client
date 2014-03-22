@@ -1,7 +1,7 @@
 Archivesspace Client
 ====================
 
-Interact with ArchivesSpace via its RESTful API.
+Interact with ArchivesSpace via its API.
 
 Installation
 ------------
@@ -9,19 +9,20 @@ Installation
 Add this line to your application's Gemfile:
 
 ```
-gem 'archivesspace-client'
+gem 'archivesspace-client', :git => "git@github.com:mark-cooper/archivesspace-client.git"
 ```
 
 And then execute:
 
 ```
-bundle
+bundle install
 ```
 
-Or install it yourself as:
+Or pull the repository and install it yourself:
 
 ```
-gem install archivesspace-client
+gem build archivesspace-client.gemspec
+gem install archivesspace-client-VERSION.gem
 ```
 
 Usage
