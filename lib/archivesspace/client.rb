@@ -18,6 +18,11 @@ class ::String
   end
 end
 
+# needed to locate template files
+def path_to_templates
+  File.join(File.dirname(File.expand_path(__FILE__)), 'client/templates')
+end
+
 module ArchivesSpace
 
   ArchivesSpaceClient = RC::Builder.client do
@@ -45,7 +50,7 @@ module ArchivesSpace
   class Client
     # Connect to the ArchivesSpace backend
 
-    attr_accessor :client, :user, :password, :token
+    attr_accessor :client, :user, :password, :templates, :token
 
     ROUTE = {
       repository: '/repositories/with_agent',
@@ -53,11 +58,19 @@ module ArchivesSpace
     }
 
     def initialize(args = {})
-      @client   = ArchivesSpaceClient.new( { site: args[:site] } )
-      @user     = args[:user]
-      @password = args[:password]
-      @session  = 'X-ArchivesSpace-Session'
-      @token    = nil
+      @client    = ArchivesSpaceClient.new( { site: args[:site] } )
+      @user      = args[:user]
+      @password  = args[:password]
+      @session   = 'X-ArchivesSpace-Session'
+      @templates = {}
+      @token     = nil
+
+      # load templates for new objects
+      Dir["#{path_to_templates}/*.json"].each do |template_file|
+        type = template_file.split("/")[-1].split(".")[0]
+        template = JSON.parse( IO.read(template_file) )
+        @templates[type] = template
+      end
     end
 
     # create a new object
@@ -67,6 +80,11 @@ module ArchivesSpace
       obj = @client.post( path, JSON.generate(payload), query )
       # todo: log obj
       Module.const_get(klass).new(obj)
+    end
+
+    def create_from_template(template, query = {})
+      type = template.delete_field("clienttype").to_sym
+      create type, template.marshal_dump, query
     end
 
     # delete an object
@@ -95,6 +113,12 @@ module ArchivesSpace
 
     def method_missing(name, *args, &block)
       @client.send(name, *args, &block)
+    end
+
+    def template_for(type)
+      raise "Template not found:\t#{type}" unless @templates.has_key? type
+      klass = "ArchivesSpace::#{type.to_s.capitalize}"
+      Module.const_get(klass).new(@templates[type])
     end
 
     # return the updated object
