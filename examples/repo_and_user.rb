@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
-require "archivesspace-client"
+require "archivesspace/client"
+require "pp"
 
 host             = "localhost"
 backend_port     = "8089" 
@@ -8,6 +9,29 @@ backend.user     = 'admin'
 backend.password = 'admin'
 backend.login
 
+########## EXAMPLES USING PROVIDED TEMPLATES
+
+pp backend.templates # view available templates
+
+x = backend.template_for "repository"
+x.repository["repo_code"] = "XYZ"
+x.repository["name"] = "XYZ Archive"
+x.agent_representation["names"][0]["primary_name"] = "XYZ"
+x.agent_representation["names"][0]["sort_name"] = "XYZ"
+x.agent_representation["agent_contacts"][0]["name"] = "Lionel Messi"
+
+pp backend.create_from_template x
+pp backend.repositories.find { |r| r.name =~ /xyz/i } 
+
+u = backend.template_for "user"
+u.username = "lmessi"
+u.name = "Lionel Messi"
+u.is_admin = true
+pp backend.create_from_template u, { password: "123456" }
+pp backend.users.find { |u| u.username =~ /messi/i } # see below for update example 
+
+########## EXAMPLES WITH USER SUPPLIED DATA STRUCTURE
+
 # repository: repo_code and name are required
 # agent representation is not required at all
 repo = {
@@ -15,7 +39,7 @@ repo = {
     repo_code: "ABC",
     name: "ABC Archive",
     org_code: "",
-    country: "USA",
+    country: "US",
     parent_institution_name: "",
     url: "http://www.abc.org",
   },
