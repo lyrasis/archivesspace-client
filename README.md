@@ -35,7 +35,7 @@ client = ArchivesSpace::Client.new # default localhost, 8089, admin, admin
 client.log # log requests
 client.login "admin", "admin"
 
-repository = client.tempate_for "repository"
+repository = client.template_for "repository"
 repository["repo_code"] = "ABC"
 repository["name"] = "ABC Archives"
 
