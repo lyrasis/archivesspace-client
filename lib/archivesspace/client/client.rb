@@ -3,6 +3,8 @@ module ArchivesSpace
   class Client
 
     include Errors
+
+    include DigitalObjects
     include Groups
     include Import
     include Repository

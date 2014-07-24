@@ -8,6 +8,17 @@ module ArchivesSpace
     end
   end # ERRORS
 
+  module DigitalObjects
+
+    include Errors
+    @@context = "repositories"
+
+    def digital_objects(repository)
+      get "#{repository["uri"]}/digital_objects"
+    end
+
+  end
+
   module Groups
 
     include Errors
