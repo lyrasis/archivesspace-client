@@ -116,6 +116,12 @@ describe "interacting with the api" do
         delete! digital_object2
       end
 
+      it "should convert digital object records to format" do
+        digital_object1 = create_digital_object!(@repository, "The Moon")
+        expect( @client.digital_object_to_xml(digital_object1) ).to be_instance_of Nokogiri::XML::Document
+        delete! digital_object1
+      end
+
       it "should yield content" do
         digital_object1 = create_digital_object!(@repository, "The Moon")
         digital_object2 = create_digital_object!(@repository, "The Earth")

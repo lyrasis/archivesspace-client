@@ -12,6 +12,12 @@ module ArchivesSpace
 
     include Errors
 
+    def digital_object_to_xml(digital_object, format = "dublin_core")
+      raise ContextError, "Working Repository has not been set" unless repository
+      id = digital_object["uri"].split("/")[-1]
+      Nokogiri::XML(client.backend["#{repository["uri"]}/digital_objects/#{format}/#{id}.xml"].get)
+    end
+
     # might be better to make these properly enumerable one day ...
     def digital_objects(format = nil, &block)
       raise ContextError, "Working Repository has not been set" unless repository
