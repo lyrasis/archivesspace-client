@@ -86,7 +86,7 @@ module ArchivesSpace
     def repositories_with_agent
       results = get routes[:registered][:repository]
       result = results.inject([]) do |with_agents, repository| 
-        id = repository["uri"][-1]
+        id = repository["uri"].split("/")[-1]
         with_agents << get("repositories/with_agent/#{id}")
       end
       result
