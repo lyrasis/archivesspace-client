@@ -54,6 +54,11 @@ module ArchivesSpace
       get JSON.parse( result )["uri"]
     end
 
+    def create_with_context(context, type, payload, params = {})
+      result = client.backend[ "#{context["uri"]}/#{routes[:registered][type.intern]}?#{params_to_s(params)}" ].post payload.to_json, { :content_type => :json, :accept => :json }
+      get JSON.parse( result )["uri"]
+    end
+
     def delete(payload)
       JSON.parse ( client.backend[payload["uri"]].delete )
     end
@@ -102,6 +107,7 @@ module ArchivesSpace
       {
         registered: {
           batch_import: "batch_import",
+          digital_object: "digital_objects",
           repository: "repositories",
           repository_with_agent: "repositories/with_agent",
           user: "users",

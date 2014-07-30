@@ -16,6 +16,9 @@ end
 
 def create_digital_object!(repository, title)
   digital_object = @client.template_for "digital_object"
+  digital_object["digital_object_id"] = SecureRandom.hex
+  digital_object["title"] = title
+  @client.create_with_context repository, "digital_object", digital_object
 end
 
 def delete!(object)
@@ -76,16 +79,16 @@ describe "interacting with the api" do
     end
 
     after :all do
-      delete! @repository
+      delete! @repository if @repository
     end
 
     context "Digital Objects" do
 
-      it "should allow a digital object to be created from a template, updated and deleted", pending: true do
+      it "should allow a digital object to be created from a template, updated and deleted" do
         digital_object = create_digital_object!(@repository, "The Moon")
         expect(digital_object["title"]).to eq "The Moon"
 
-        digital_object["name"] = "The Earth"
+        digital_object["title"] = "The Earth"
         digital_object = @client.update digital_object
         expect(digital_object["title"]).to eq "The Earth"
 
@@ -93,11 +96,21 @@ describe "interacting with the api" do
         expect(result["status"]).to eq "Deleted"
       end
 
-      it "should retrieve digital objects", pending: true do
+      it "should retrieve digital objects" do
         digital_object1 = create_digital_object!(@repository, "The Moon")
         digital_object2 = create_digital_object!(@repository, "The Earth")
         digital_objects = @client.digital_objects(@repository)
         expect(digital_objects.size).to eq 2
+        delete! digital_object1
+        delete! digital_object2
+      end
+
+      it "should retrieve digital objects by format" do
+        digital_object1 = create_digital_object!(@repository, "The Moon")
+        digital_object2 = create_digital_object!(@repository, "The Earth")
+        digital_objects = @client.digital_objects(@repository, "mods")
+        expect(digital_objects.size).to eq 2
+        digital_objects.each { |o| expect(o).to be_instance_of Nokogiri::XML::Document }
         delete! digital_object1
         delete! digital_object2
       end

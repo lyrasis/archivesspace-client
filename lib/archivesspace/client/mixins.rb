@@ -13,8 +13,15 @@ module ArchivesSpace
     include Errors
     @@context = "repositories"
 
-    def digital_objects(repository)
-      get "#{repository["uri"]}/digital_objects"
+    def digital_objects(repository, format = nil)
+      digital_object_ids = get("#{repository["uri"]}/digital_objects?all_ids=true")
+      results = []
+      if format
+        results = digital_object_ids.map { |o| Nokogiri::XML(client.backend["#{repository["uri"]}/digital_objects/#{format}/#{o}.xml"].get) }
+      else
+        results = digital_object_ids.map { |o| get "#{repository["uri"]}/digital_objects/#{o}" }
+      end
+      results
     end
 
   end

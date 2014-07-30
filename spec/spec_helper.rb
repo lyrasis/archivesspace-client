@@ -3,6 +3,7 @@ Bundler.setup
 
 require 'archivesspace/client'
 require 'rake'
+require 'securerandom'
 load File.expand_path("../../Rakefile", __FILE__)
 
 RSpec.configure do |config|
