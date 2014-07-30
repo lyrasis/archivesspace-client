@@ -18,13 +18,15 @@ module ArchivesSpace
       end
     end # BACKEND
 
-    attr_accessor :host, :port, :headers, :client, :templates
+    attr_accessor :host, :port, :headers, :client, :repository, :templates
 
     def initialize(host = "localhost", port = 8089, headers = {})
        @host = host
        @port = port
        @headers = {}
        @client = Backend.new(host, port, "", headers)
+
+       @repository = nil
        @templates = {}
 
       # load templates for new objects
@@ -54,8 +56,9 @@ module ArchivesSpace
       get JSON.parse( result )["uri"]
     end
 
-    def create_with_context(context, type, payload, params = {})
-      result = client.backend[ "#{context["uri"]}/#{routes[:registered][type.intern]}?#{params_to_s(params)}" ].post payload.to_json, { :content_type => :json, :accept => :json }
+    def create_with_context(type, payload, params = {})
+      raise ContextError, "Working Repository has not been set" unless repository
+      result = client.backend[ "#{repository["uri"]}/#{routes[:registered][type.intern]}?#{params_to_s(params)}" ].post payload.to_json, { :content_type => :json, :accept => :json }
       get JSON.parse( result )["uri"]
     end
 
@@ -87,6 +90,10 @@ module ArchivesSpace
     def update(payload, params = {})
       result = client.backend[ "#{payload["uri"]}?#{params_to_s(params)}" ].post payload.to_json, { :content_type => :json, :accept => :json }
       get JSON.parse( result )["uri"]
+    end
+
+    def working_repository(repository)
+      @repository = repository
     end
 
     ##########

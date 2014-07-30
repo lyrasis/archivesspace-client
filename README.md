@@ -44,7 +44,8 @@ client.create "repository", repository
 repository = client.repositories.find { |repository| repository["repo_code"] =~ /^A/ }
 pp repository # spit out the details
 
-pp client.groups(repository) # spit out repository groups
+client.working_repository repository # set this repository as the context for repository based requests
+pp client.groups # spit out repository groups
 
 pp client.version # display version information
 

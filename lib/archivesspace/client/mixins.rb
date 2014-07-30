@@ -11,10 +11,10 @@ module ArchivesSpace
   module DigitalObjects
 
     include Errors
-    @@context = "repositories"
 
     # might be better to make these properly enumerable one day ...
-    def digital_objects(repository, format = nil, &block)
+    def digital_objects(format = nil, &block)
+      raise ContextError, "Working Repository has not been set" unless repository
       digital_object_ids = get("#{repository["uri"]}/digital_objects?all_ids=true")
       results = digital_object_ids.map do |o|
         if format
@@ -33,15 +33,15 @@ module ArchivesSpace
   module Groups
 
     include Errors
-    @@context = "repositories"
 
-    def groups(repository)
+    def groups
+      raise ContextError, "Working Repository has not been set" unless repository
       get "#{repository["uri"]}/groups"
     end
 
-    def set_user_groups(repository, users_with_roles, params = { with_members: true })
+    def set_user_groups(users_with_roles, params = { with_members: true })
       updated = []
-      groups(repository).each do |group|
+      groups.each do |group|
         changed = false
 
         users_with_roles.each do |user, roles|
