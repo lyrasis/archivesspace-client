@@ -115,6 +115,16 @@ describe "interacting with the api" do
         delete! digital_object2
       end
 
+      it "should yield content" do
+        digital_object1 = create_digital_object!(@repository, "The Moon")
+        digital_object2 = create_digital_object!(@repository, "The Earth")
+        @client.digital_objects(@repository) do |o|
+          expect(o).to be_instance_of Hash
+        end
+        delete! digital_object1
+        delete! digital_object2
+      end
+
     end
 
   end
