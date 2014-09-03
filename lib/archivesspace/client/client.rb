@@ -8,6 +8,7 @@ module ArchivesSpace
     include Groups
     include Import
     include Repository
+    include Resources
     include System
     include Users
 

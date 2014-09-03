@@ -134,6 +134,12 @@ describe "interacting with the api" do
 
     end
 
+    context "Resources" do
+
+      #
+
+    end
+
   end
 
   context "Permissions" do

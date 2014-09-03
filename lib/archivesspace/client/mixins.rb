@@ -104,6 +104,26 @@ module ArchivesSpace
 
   end # REPOSITORY
 
+  module Resources
+
+    def resources(format = nil, &block)
+      raise ContextError, "Working Repository has not been set" unless repository
+      resource_ids = get("#{repository["uri"]}/resources?all_ids=true")
+      results = resource_ids.map do |o|
+        if format
+          format_type = format == "ead" ? "resource_descriptions" : "resources/#{format}"
+          result = Nokogiri::XML(client.backend["#{repository["uri"]}/#{format_type}/#{o}.xml"].get)
+        else
+          result = get "#{repository["uri"]}/resources/#{o}"
+        end
+        yield result if block_given?
+        result
+      end
+      results
+    end
+
+  end
+
   module Search
 
     include Errors
