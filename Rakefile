@@ -13,7 +13,7 @@ namespace :archivesspace do
   end
 
   task :download do
-    `wget -O archivesspace.zip https://github.com/archivesspace/archivesspace/releases/download/v1.0.9/archivesspace-v1.0.9.zip`
+    `wget -O archivesspace.zip https://github.com/archivesspace/archivesspace/releases/download/v1.1.0/archivesspace-v1.1.0.zip`
   end
 
   task :unzip do
