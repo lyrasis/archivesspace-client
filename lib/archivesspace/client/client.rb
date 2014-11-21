@@ -19,13 +19,14 @@ module ArchivesSpace
       end
     end # BACKEND
 
-    attr_accessor :host, :port, :headers, :client, :repository, :templates
+    attr_accessor :host, :port, :path, :headers, :client, :repository, :templates
 
-    def initialize(host = "localhost", port = 8089, headers = {})
+    def initialize(host = "http://localhost", port = 8089, path = "", headers = {})
        @host = host
        @port = port
+       @path = path
        @headers = {}
-       @client = Backend.new(host, port, "", headers)
+       @client = Backend.new(host, port, path, headers)
 
        @repository = nil
        @templates = {}
@@ -48,7 +49,7 @@ module ArchivesSpace
       result    =  client.backend["users/#{user}/login"].post( { password: password } )
       token = JSON.parse( result )["session"]
       @headers = { "X-ArchivesSpace-Session" => token }
-      @client = Backend.new(host, port, "", headers)
+      @client = Backend.new(host, port, path, headers)
     end
 
     # check status
