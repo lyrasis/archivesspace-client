@@ -31,18 +31,22 @@ Usage
 See the examples directory. Quick examples:
 
 ```
-client = ArchivesSpace::Client.new # default localhost, 8089, admin, admin
+client = ArchivesSpace::Client.new # default http://localhost, 8089
+# https with path example
+client = ArchivesSpace::Client.new https://secure.archive.org, 443, "api/"
+
 client.log # log requests
 client.login "admin", "admin"
 
-repository = client.template_for "repository"
-repository["repo_code"] = "ABC"
-repository["name"] = "ABC Archives"
+new_repo = client.template_for "repository"
+new_repo["repo_code"] = "ABC"
+new_repo["name"] = "ABC Archives"
 
-client.create "repository", repository
+client.create "repository", new_repo
 
+# find the repository that was just created
 repository = client.repositories.find { |repository| repository["repo_code"] =~ /^A/ }
-pp repository # spit out the details
+pp repository # display the json response
 
 client.working_repository repository # set this repository as the context for repository based requests
 pp client.groups # spit out repository groups
