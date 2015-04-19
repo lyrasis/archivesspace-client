@@ -4,16 +4,16 @@ namespace :archivesspace do
 
   task :check_downloaded do
     unless File.file? "archivesspace.zip"
-          Rake::Task["archivesspace:prepare"].invoke
+      Rake::Task["archivesspace:prepare"].invoke
     end
   end
 
   task :check_running do
-    # 
+    #
   end
 
   task :download do
-    `wget -O archivesspace.zip https://github.com/archivesspace/archivesspace/releases/download/v1.1.0/archivesspace-v1.1.0.zip`
+    `wget -O archivesspace.zip https://github.com/archivesspace/archivesspace/releases/download/v1.2.0/archivesspace-v1.2.0.zip`
   end
 
   task :unzip do
