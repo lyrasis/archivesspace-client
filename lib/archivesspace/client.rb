@@ -5,4 +5,4 @@ require "archivesspace/client/client"
 require 'json'
 require 'nokogiri'
 require 'pp'
-require 'rest_client'
+require 'rest-client'
