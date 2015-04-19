@@ -64,8 +64,9 @@ Tests (under development)
 See the Rakefile for how to download and have ArchivesSpace running locally for testing.
 
 ```bash
-rake archivesspace:prepare # download, unzip, configure
-rake archivesspace:reset # stop, clear, start
+rake as:bootstrap
+docker logs -f archivesspace # wait for backend
+bundle exec rspec
 ```
 
 The goal is to have this be a seamless process, when time allows.

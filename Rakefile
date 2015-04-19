@@ -1,57 +1,47 @@
 require "bundler/gem_tasks"
 
-namespace :archivesspace do
+namespace :as do
 
-  task :check_downloaded do
-    unless File.file? "archivesspace.zip"
-      Rake::Task["archivesspace:prepare"].invoke
-    end
+  archivesspace_docker_image = "markcooper/archivesspace"
+
+  desc "bootstrap archivesspace"
+  task :bootstrap do
+    Rake::Task["as:pull"].invoke
+    Rake::Task["as:stop"].invoke
+    Rake::Task["as:rm"].invoke
+    Rake::Task["as:run"].invoke
+  end
+  task :bs => :bootstrap
+
+  desc "ping to see if archivesspace backend is available"
+  task :ping do
+    response = RestClient.get 'http://localhost:8089'
+    puts response.code
+    response.code
   end
 
-  task :check_running do
-    #
+  desc "pull archivesspace docker image"
+  task :pull do
+    sh "docker pull #{archivesspace_docker_image}"
   end
 
-  task :download do
-    `wget -O archivesspace.zip https://github.com/archivesspace/archivesspace/releases/download/v1.2.0/archivesspace-v1.2.0.zip`
+  desc "run archivesspace docker image"
+  task :run do
+    puts "starting archivesspace (see: docker logs -f archivesspace)"
+    `docker run --name archivesspace -d -p 8089:8089 #{archivesspace_docker_image}`
   end
 
-  task :unzip do
-    `unzip archivesspace.zip`
-  end
-
-  task :setup do
-    `echo "AppConfig[:enable_frontend] = false" >> archivesspace/config/config.rb`
-    `echo "AppConfig[:enable_public] = false" >> archivesspace/config/config.rb`
-  end
-
-  task :start do
-    `./archivesspace/archivesspace.sh start`
-  end
-
+  desc "stop archivesspace docker image"
   task :stop do
-    `./archivesspace/archivesspace.sh stop`
+    puts "stopping archivesspace"
+    `docker stop archivesspace`
   end
 
-  task :nuke do
-    `rm -rf archivesspace/data/*`
+  desc "remove archivesspace docker image"
+  task :remove do
+    puts "removing archivesspace image"
+    `docker rm archivesspace`
   end
-
-  task :prepare do
-    Rake::Task["archivesspace:download"].invoke
-    Rake::Task["archivesspace:unzip"].invoke
-    Rake::Task["archivesspace:setup"].invoke
-  end
-
-  task :reset do
-    Rake::Task["archivesspace:stop"].invoke
-    Rake::Task["archivesspace:nuke"].invoke
-    Rake::Task["archivesspace:start"].invoke
-  end
-
-  task :cleanup do
-    `rm -rf archivesspace/`
-    `rm archivesspace.zip`
-  end
+  task :rm => :remove
 
 end
