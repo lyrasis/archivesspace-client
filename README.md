@@ -8,52 +8,54 @@ Installation
 
 Add this line to your application's Gemfile:
 
-```
+```ruby
 gem 'archivesspace-client', :git => "https://github.com/mark-cooper/archivesspace-client.git"
 ```
 
 And then execute:
 
-```
+```bash
 bundle install
 ```
 
 Or pull the repository and install it yourself:
 
-```
+```bash
 gem build archivesspace-client.gemspec
 gem install archivesspace-client-VERSION.gem
 ```
 
 Usage
---------
+-----
 
 See the examples directory. Quick examples:
 
-```
+```ruby
 client = ArchivesSpace::Client.new # default http://localhost, 8089
-# https with path example
-client = ArchivesSpace::Client.new https://secure.archive.org, 443, "api/"
+client = ArchivesSpace::Client.new https://secure.archive.org, 443, "api/" # https
 
 client.log # log requests
 client.login "admin", "admin"
 
+# create a new repository
 new_repo = client.template_for "repository"
 new_repo["repo_code"] = "ABC"
 new_repo["name"] = "ABC Archives"
-
 client.create "repository", new_repo
 
-# find the repository that was just created
+# find and display the repository that was just created
 repository = client.repositories.find { |repository| repository["repo_code"] =~ /^A/ }
-pp repository # display the json response
+pp repository
 
-client.working_repository repository # set this repository as the context for repository based requests
-pp client.groups # spit out repository groups
+# set this repository as the context for repository based requests
+client.working_repository repository
+pp client.groups
 
-pp client.version # display version information
+# display version information
+pp client.version
 
-users = client.users( { page: 1 } ) # start at the beginning will retrive all users
+# users
+users = client.users( { page: 1 } )
 ```
 
 Tests (under development)
@@ -61,7 +63,7 @@ Tests (under development)
 
 See the Rakefile for how to download and have ArchivesSpace running locally for testing.
 
-```
+```bash
 rake archivesspace:prepare # download, unzip, configure
 rake archivesspace:reset # stop, clear, start
 ```
