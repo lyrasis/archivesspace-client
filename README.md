@@ -61,14 +61,10 @@ users = client.users( { page: 1 } )
 Tests (under development)
 -----------------------------------
 
-See the Rakefile for how to download and have ArchivesSpace running locally for testing.
-
 ```bash
-rake as:bootstrap
-docker logs -f archivesspace # wait for backend
 bundle exec rspec
 ```
 
-The goal is to have this be a seamless process, when time allows.
+Requires Docker.
 
 ---
