@@ -1,0 +1,36 @@
+{
+  "repository": {
+    "repo_code": "<%= data[:repo_code] %>",
+    "name": "<%= data[:name] %>",
+    "org_code": "<%= data[:org_code] %>",
+    "country": "<%= data[:country] %>",
+    "parent_institution_name": "<%= data[:parent_institution_name] %>",
+    "url": "<%= data[:url] %>"
+  },
+  "agent_representation": {
+    "names": [
+      {
+        "primary_name": "<%= data[:name] %>",
+        "source": "local",
+        "sort_name": "<%= data[:name] %>"
+      }
+    ],
+    "agent_contacts": [
+      {
+        "name": "<%= data[:agent_contact_name] %>",
+        "address_1": "<%= data[:agent_contact_address_1] %>",
+        "address_2": "<%= data[:agent_contact_address_2] %>",
+        "address_3": "<%= data[:agent_contact_address_3] %>",
+        "city": "<%= data[:agent_contact_city] %>",
+        "region": "",
+        "country": "<%= data[:agent_contact_country] %>",
+        "post_code": "<%= data[:agent_contact_post_code] %>",
+        "telephone": "<%= data[:agent_contact_telephone] %>",
+        "telephone_ext": "",
+        "fax": "",
+        "email": "<%= data[:agent_contact_email] %>",
+        "note": ""
+      }
+    ]
+  }
+}

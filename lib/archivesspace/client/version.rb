@@ -1,5 +1,5 @@
-module Archivesspace
-  module Version
-    VERSION = "0.0.1"
+module ArchivesSpace
+  class Client
+    VERSION = "0.1.0"
   end
 end

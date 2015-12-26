@@ -1,139 +1,41 @@
 module ArchivesSpace
 
   class Client
+    include Helpers
+    attr_accessor :token
+    attr_reader   :config
 
-    include Errors
-
-    include DigitalObjects
-    include Groups
-    include Import
-    include Repository
-    include Resources
-    include System
-    include Users
-
-    class Backend
-      attr_accessor :backend
-      def initialize(host, port, path = "", headers = {})
-        @backend = RestClient::Resource.new("#{host}:#{port}/#{path.strip}", headers: headers)
-      end
-    end # BACKEND
-
-    attr_accessor :host, :port, :path, :headers, :client, :repository, :templates
-
-    def initialize(host = "http://localhost", port = 8089, path = "", headers = {})
-       @host = host
-       @port = port
-       @path = path
-       @headers = {}
-       @client = Backend.new(host, port, path, headers)
-
-       @repository = nil
-       @templates = {}
-
-      # load templates for new objects
-      Dir["#{path_to_templates}/*.json"].each do |template_file|
-        type = template_file.split("/")[-1].split(".")[0]
-        template = JSON.parse( IO.read(template_file) )
-        @templates[type] = template
-      end
-      
+    def initialize(config = Configuration.new)
+      raise "Invalid configuration object" unless config.kind_of? ArchivesSpace::Configuration
+      @config = config
+      @token  = nil
     end
 
-    def log(logger = STDOUT)
-      RestClient.log = logger
+    def get(path, options = {})
+      request 'GET', path, options
     end
 
-    # needs some error handling
-    def login(user, password)
-      result    =  client.backend["users/#{user}/login"].post( { password: password } )
-      token = JSON.parse( result )["session"]
-      @headers = { "X-ArchivesSpace-Session" => token }
-      @client = Backend.new(host, port, path, headers)
+    def post(path, payload, params = {})
+      request 'POST', path, { body: payload.to_json, query: params }
     end
 
-    # check status
-    def create(type, payload, params = {})
-      result = client.backend[ "#{routes[:registered][type.intern]}?#{params_to_s(params)}" ].post payload.to_json, { :content_type => :json, :accept => :json }
-      get JSON.parse( result )["uri"]
+    def put(path, payload)
+      request 'PUT', path, { body: payload.to_json }
     end
 
-    def create_with_context(type, payload, params = {})
-      raise ContextError, "Working Repository has not been set" unless repository
-      result = client.backend[ "#{repository["uri"]}/#{routes[:registered][type.intern]}?#{params_to_s(params)}" ].post payload.to_json, { :content_type => :json, :accept => :json }
-      get JSON.parse( result )["uri"]
-    end
-
-    def delete(payload)
-      JSON.parse ( client.backend[payload["uri"]].delete )
-    end
-
-    # this should be less opinionated about paging
-    def get(path, params = {})
-      result = JSON.parse( client.backend["#{path}?#{params_to_s(params)}"].get )
-      if params.has_key? :page
-        results = result["results"]
-        while result["this_page"] != result["last_page"] do
-          params[:page] += 1
-          result = JSON.parse( client.backend["#{path}?#{params_to_s(params)}"].get )
-          results.concat result["results"]
-        end
-      else
-        results = result
-      end
-      results
-    end
-
-    def merge(payload1, payload2)
-      payload1.deep_merge payload2
-    end
-
-    # check status
-    def update(payload, params = {})
-      result = client.backend[ "#{payload["uri"]}?#{params_to_s(params)}" ].post payload.to_json, { :content_type => :json, :accept => :json }
-      get JSON.parse( result )["uri"]
-    end
-
-    def working_repository(repository)
-      @repository = repository
-    end
-
-    ##########
-
-    # filename is the type
-    def template_for(type)
-      templates[type]
-    end
-
-    def view_context
-      { "uri" => client.backend.url } # parse fully
+    def delete(path)
+      request 'DELETE', path
     end
 
     private
 
-    # endpoints for creating [post] and getting objects
-    def routes
-      {
-        registered: {
-          batch_import: "batch_import",
-          digital_object: "digital_objects",
-          repository: "repositories",
-          repository_with_agent: "repositories/with_agent",
-          user: "users",
-        }
-      }
+    def request(method, path, options = {})
+      sleep config.throttle
+      options[:headers] = { "X-ArchivesSpace-Session" => token } if token
+      result = Request.new(config, method, path, options).execute
+      Response.new result
     end
 
-    ########## HELPERS
-
-    def params_to_s(params)
-      params.to_a.map { |x| "#{x[0]}=#{x[1]}" }.join("&")
-    end
-
-    def path_to_templates
-      File.join(File.dirname(File.expand_path(__FILE__)), 'templates')
-    end
-
-  end # CLIENT
+  end
 
 end

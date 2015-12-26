@@ -1,0 +1,68 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: http://localhost:8089//users/admin/login?password=admin
+    body:
+      encoding: UTF-8
+      string: ''
+    headers: {}
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Sat, 26 Dec 2015 05:05:14 GMT
+      Content-Type:
+      - application/json
+      Cache-Control:
+      - private, must-revalidate, max-age=0
+      Content-Length:
+      - '2491'
+      X-Content-Type-Options:
+      - nosniff
+      Server:
+      - Jetty(8.1.5.v20120716)
+    body:
+      encoding: UTF-8
+      string: |
+        {"session":"a1b9e7cac8fb01d2502678702c1eaa71b1fa6375a1de8b1f965095e71f4fd6f8","user":{"lock_version":84,"username":"admin","name":"Administrator","is_system_user":true,"create_time":"2015-12-24T05:51:42Z","system_mtime":"2015-12-26T05:05:14Z","user_mtime":"2015-12-26T05:05:14Z","jsonmodel_type":"user","groups":[],"is_admin":true,"uri":"/users/1","agent_record":{"ref":"/agents/people/1"},"permissions":{"/repositories/1":["update_location_record","delete_vocabulary_record","update_subject_record","delete_subject_record","update_agent_record","delete_agent_record","update_vocabulary_record","merge_subject_record","merge_agent_record","update_container_profile_record","administer_system","become_user","cancel_importer_job","create_repository","delete_archival_record","delete_classification_record","delete_event_record","delete_repository","import_records","index_system","manage_agent_record","manage_container_profile_record","manage_container_record","manage_rde_templates","manage_repository","manage_subject_record","manage_users","manage_vocabulary_record","mediate_edits","merge_agents_and_subjects","merge_archival_record","suppress_archival_record","system_config","transfer_archival_record","transfer_repository","update_accession_record","update_classification_record","update_container_record","update_digital_object_record","update_event_record","update_resource_record","view_all_records","view_repository","view_suppressed"],"_archivesspace":["administer_system","become_user","cancel_importer_job","create_repository","delete_archival_record","delete_classification_record","delete_event_record","delete_repository","import_records","index_system","manage_agent_record","manage_container_profile_record","manage_container_record","manage_rde_templates","manage_repository","manage_subject_record","manage_users","manage_vocabulary_record","mediate_edits","merge_agents_and_subjects","merge_archival_record","suppress_archival_record","system_config","transfer_archival_record","transfer_repository","update_accession_record","update_classification_record","update_container_record","update_digital_object_record","update_event_record","update_resource_record","view_all_records","view_repository","view_suppressed","update_location_record","delete_vocabulary_record","update_subject_record","delete_subject_record","update_agent_record","delete_agent_record","update_vocabulary_record","merge_subject_record","merge_agent_record","update_container_profile_record"]}}}
+    http_version: 
+  recorded_at: Sat, 26 Dec 2015 05:05:14 GMT
+- request:
+    method: get
+    uri: http://localhost:8089/version
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      X-Archivesspace-Session:
+      - a1b9e7cac8fb01d2502678702c1eaa71b1fa6375a1de8b1f965095e71f4fd6f8
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Sat, 26 Dec 2015 05:05:14 GMT
+      Content-Type:
+      - text/html;charset=UTF-8
+      Cache-Control:
+      - private, must-revalidate, max-age=0
+      Content-Length:
+      - '29'
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      Server:
+      - Jetty(8.1.5.v20120716)
+    body:
+      encoding: UTF-8
+      string: ArchivesSpace (20151120-0315)
+    http_version: 
+  recorded_at: Sat, 26 Dec 2015 05:05:14 GMT
+recorded_with: VCR 3.0.1

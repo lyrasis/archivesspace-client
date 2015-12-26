@@ -1,6 +1,8 @@
 *.gem
 *.rbc
 *.lock
+*.xml
+*.zip
 .bundle
 .config
 .yardoc
@@ -9,6 +11,7 @@ InstalledFiles
 _yardoc
 coverage
 doc/
+examples/my_*.rb
 lib/bundler/man
 pkg
 rdoc
@@ -16,5 +19,4 @@ spec/reports
 test/tmp
 test/version_tmp
 tmp
-*.zip
 /archivesspace/

@@ -5,7 +5,7 @@ require 'archivesspace/client/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "archivesspace-client"
-  spec.version       = Archivesspace::Version::VERSION
+  spec.version       = ArchivesSpace::Client::VERSION
   spec.authors       = ["Mark Cooper"]
   spec.email         = ["mark.c.cooper@outlook.com"]
   spec.summary       = %q{Interact with ArchivesSpace via its RESTful API.}
@@ -18,11 +18,14 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "bundler", "~> 1.5"
-  spec.add_development_dependency "rake"
+  spec.add_development_dependency "bundler", "~> 1.10"
+  spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec"
+  spec.add_development_dependency "vcr"
+  spec.add_development_dependency "webmock"
+  spec.add_development_dependency "awesome_print"
 
+  spec.add_dependency "httparty"
   spec.add_dependency "json"
   spec.add_dependency "nokogiri"
-  spec.add_dependency "rest-client"
 end

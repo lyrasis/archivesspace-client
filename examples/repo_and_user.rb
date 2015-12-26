@@ -1,34 +1,40 @@
-#!/usr/bin/env ruby
-require "archivesspace/client"
-require "pp"
+$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+require 'awesome_print'
+require 'archivesspace/client'
 
-client          = ArchivesSpace::Client.new # localhost,  8089
-client.login "admin", "admin"
+# default client connection: localhost:8089, admin, admin
+client = ArchivesSpace::Client.new.login
 
-########## EXAMPLES USING PROVIDED TEMPLATES
+ap ArchivesSpace::Template.list # view available templates
 
-pp client.templates # view available templates
+repo_data = {
+  repo_code: "XYZ",
+  name: "XYZ Archive",
+  agent_contact_name: "John Doe",
+}
 
-repository_with_agent = client.template_for "repository_with_agent"
-repository_with_agent["repository"]["repo_code"] = "XYZ"
-repository_with_agent["repository"]["name"] = "XYZ Archive"
-repository_with_agent["agent_representation"]["names"][0]["primary_name"] = "XYZ"
-repository_with_agent["agent_representation"]["names"][0]["sort_name"] = "XYZ"
-repository_with_agent["agent_representation"]["agent_contacts"][0]["name"] = "Lionel Messi"
+repository = ArchivesSpace::Template.process_template(:repository_with_agent, repo_data)
+response = client.post('/repositories/with_agent', repository)
+if response.status_code == 201
+  repository = client.repositories.find { |r| r["repo_code"] == "XYZ" }
+  ap repository
+  ap client.delete(repository["uri"])
+else
+  ap response.parsed
+end
 
-pp client.create "repository_with_agent", repository_with_agent
-pp client.repositories_with_agent.find { |r| r["name"] =~ /xyz/i } 
+user_data = {
+  username: "lmessi",
+  name: "Lionel Messi",
+  is_admin: true,
+}
 
-user = client.template_for "user"
-user["username"] = "lmessi"
-user["name"] = "Lionel Messi"
-user["is_admin"] = true
-pp client.create "user", u, { password: "123456" }
-
-user = client.users.find { |u| u.username =~ /messi/i }
-user["name"] = "Cristiano Ronaldo"
-
-pp client.update user
-
-__END__
-
+user = ArchivesSpace::Template.process_template(:user, user_data)
+response = client.post('users', user, { password: "123456" })
+if response.status_code == 201
+  user = client.users.find { |r| r["username"] == "lmessi" }
+  ap user
+  ap client.delete user["uri"]
+else
+  ap response.parsed
+end

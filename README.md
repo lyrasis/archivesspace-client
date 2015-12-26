@@ -1,15 +1,15 @@
 Archivesspace Client
-====================
+===
 
 Interact with ArchivesSpace via its API.
 
 Installation
-------------
+---
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'archivesspace-client', :git => "https://github.com/mark-cooper/archivesspace-client.git"
+gem 'archivesspace-client'
 ```
 
 And then execute:
@@ -18,53 +18,103 @@ And then execute:
 bundle install
 ```
 
-Or pull the repository and install it yourself:
+Or install it yourself as:
 
-```bash
-gem build archivesspace-client.gemspec
-gem install archivesspace-client-VERSION.gem
-```
+    $ gem install archivesspace-client
 
 Usage
------
+---
 
-See the examples directory. Quick examples:
+See the examples directory for a range of use cases.
+
+**Default configuration**
+
+Create client with default settings (`localhost:8089`, `admin`, `admin`):
 
 ```ruby
-client = ArchivesSpace::Client.new # default http://localhost, 8089
-client = ArchivesSpace::Client.new https://secure.archive.org, 443, "api/" # https
-
-client.log # log requests
-client.login "admin", "admin"
-
-# create a new repository
-new_repo = client.template_for "repository"
-new_repo["repo_code"] = "ABC"
-new_repo["name"] = "ABC Archives"
-client.create "repository", new_repo
-
-# find and display the repository that was just created
-repository = client.repositories.find { |repository| repository["repo_code"] =~ /^A/ }
-pp repository
-
-# set this repository as the context for repository based requests
-client.working_repository repository
-pp client.groups
-
-# display version information
-pp client.version
-
-# users
-users = client.users( { page: 1 } )
+client = ArchivesSpace::Client.new.login
 ```
 
-Tests (under development)
------------------------------------
+**Custom configuration**
+
+To supply custom configuration to client:
+
+```ruby
+config = ArchivesSpace::Configuration.new({
+  base_uri: "https://archives.university.edu/api",
+  base_repo: "",
+  username: "admin",
+  password: "123456",
+  page_size: 50,
+  throttle: 0,
+  verify_ssl: false,
+})
+
+client = ArchivesSpace::Client.new(config).login
+```
+
+**Making basic requests**
+
+The client responds to the standard request methods:
+
+```ruby
+client.post('users', payload, { password: "abc123" }) # CREATE
+client.get('users/5') # READ
+client.post('users/5', payload) # UPDATE
+client.delete('users/5') # DELETE
+
+# these all defer to `request`
+client.request('GET', 'users/5')
+
+# to add params
+client.get('users', { query: { all_ids: true } }).parsed
+
+# using convenience methods
+user = client.all('users').find { |user| user["username"] == "jdoe" }
+
+# or even ...
+user = client.users.find { |user| user["username"] == "jdoe" }
+```
+
+See `helpers.rb` for more convenience methods such as `client.digital_objects` etc.
+
+**Setting a repository context**
+
+Update the `base_repo` configuration value to add a repository scope to requests (this is optional).
+
+```ruby
+client.config.base_repo = "repositories/2"
+client.get('digital_objects') # instead of "repositories/2/digital_objects" etc.
+
+# to reset
+client.config.base_repo = ""
+```
+
+Development
+---
+
+To run the examples start a local instance of ArchivesSpace then:
 
 ```bash
-bundle exec rspec
+bundle exec ruby examples/repo_and_user.rb
 ```
 
-Requires Docker.
+Any script placed in the examples directory with a `my_` prefix are ignored by git. Follow the convention used by the existing scripts to bootstrap and experiment away.
+
+To run the tests:
+
+```bash
+bundle exec rake
+```
+
+Contributing
+---
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/lyrasis/archivesspace-client.
+
+License
+---
+
+The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
 
 ---

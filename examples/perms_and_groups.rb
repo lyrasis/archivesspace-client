@@ -1,12 +1,8 @@
-#!/usr/bin/env ruby
-require "archivesspace/client"
-require "json"
-require "pp"
+$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+require 'awesome_print'
+require 'archivesspace/client'
 
-client          = ArchivesSpace::Client.new # localhost,  8089
-client.login "admin", "admin"
+# default client connection: localhost:8089, admin, admin
+client = ArchivesSpace::Client.new.login
 
-##### COMING ...
-
-__END__
-
+# todo ... example of assignment using CSV

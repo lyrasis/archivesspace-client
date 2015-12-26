@@ -1,29 +1,14 @@
-require 'bundler/setup'
-Bundler.setup
-
+$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'archivesspace/client'
-require 'rake'
-require 'securerandom'
-load File.expand_path("../../Rakefile", __FILE__)
+require 'vcr'
+require 'webmock/rspec'
 
-RSpec.configure do |config|
-  Rake::Task["as:bs"].invoke
-  puts "waiting 30 seconds for bootstrap"
-  sleep 30
-  loop do
-    begin
-      response = RestClient.get 'http://localhost:8089'
-      break if response.code == 200
-    rescue Exception => ex
-      puts "archivesspace is not ready ..."
-      sleep 10
-    end
-  end
+# GLOBAL VALUES FOR SPECS
+DEFAULT_BASE_URI = "http://localhost:8089"
+CUSTOM_BASE_URI  = "https://archives.university.edu/api"
 
-  config.after(:all) do
-    ["stop", "rm"].each do |task|
-      Rake::Task["as:#{task}"].reenable
-      Rake::Task["as:#{task}"].invoke
-    end
-  end
+VCR.configure do |c|
+  c.cassette_library_dir = "spec/fixtures/cassettes"
+  c.hook_into :webmock
+  c.default_cassette_options = { :record => :once }
 end
