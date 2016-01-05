@@ -10,6 +10,13 @@ module ArchivesSpace
 
   module Helpers
 
+    def accessions(options = {}, &block)
+      records = all('accessions', options) do |record|
+        yield record if block_given?
+      end
+      records
+    end
+
     def all(path, options = {}, &block)
       all    = []
       format = options.delete(:format)
