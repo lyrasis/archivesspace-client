@@ -19,8 +19,8 @@ module ArchivesSpace
       request 'POST', path, { body: payload.to_json, query: params }
     end
 
-    def put(path, payload)
-      request 'PUT', path, { body: payload.to_json }
+    def put(path, payload, params = {})
+      request 'PUT', path, { body: payload.to_json, query: params }
     end
 
     def delete(path)

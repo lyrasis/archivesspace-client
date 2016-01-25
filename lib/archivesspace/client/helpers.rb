@@ -18,14 +18,16 @@ module ArchivesSpace
     end
 
     def all(path, options = {}, &block)
-      all    = []
-      format = options.delete(:format)
+      all      = []
+      format   = options.delete(:format)
+      parse_id = options.delete(:parse_id)
       # options[:headers] -- add xml headers if format
 
       result = get(path, options.merge({ query: { all_ids: true } } ))
-      ap result
       raise RequestError.new result.status if result.status_code != 200
-      result.parsed.each do |id|
+      ids    = result.parsed
+      ids    = ids.map{ |object| object["uri"].split("/")[-1] } if parse_id
+      ids.each do |id|
         path_with_id = format ? "#{format}/#{id}.xml" : "#{path}/#{id}"
         result = get(path_with_id, options)
         raise RequestError.new result.status if result.status_code != 200
@@ -60,35 +62,38 @@ module ArchivesSpace
     end
 
     def groups
-      #
+      records = all('groups', { parse_id: true }) do |record|
+        yield record if block_given?
+      end
+      records
     end
 
     def group_user_assignment(users_with_roles, params = { with_members: true })
-      # updated = []
-      # groups.each do |group|
-      #   changed = false
+      updated = []
+      groups do |group|
+        changed = false
 
-      #   users_with_roles.each do |user, roles|
-      #     if roles.include? group["group_code"]
-      #       unless group["member_usernames"].include? user
-      #         group["member_usernames"] << user
-      #         changed = true
-      #       end
-      #     else
-      #       if group["member_usernames"].include? user
-      #         group["member_usernames"].delete user
-      #         changed = true
-      #       end
-      #     end
-      #   end
+        users_with_roles.each do |user, roles|
+          if roles.include? group["group_code"]
+            unless group["member_usernames"].include? user
+              group["member_usernames"] << user
+              changed = true
+            end
+          else
+            if group["member_usernames"].include? user
+              group["member_usernames"].delete user
+              changed = true
+            end
+          end
+        end
 
-      #   if changed
-      #     updated << update( group, params )
-      #   end
-        
-      #   sleep 1 # moderate requests
-      # end
-      # updated
+        if changed
+          id = group["uri"].split("/")[-1]
+          response = post( "/groups/#{id}", group, params )
+          updated << response.parsed
+        end
+      end
+      updated
     end
 
     def login
