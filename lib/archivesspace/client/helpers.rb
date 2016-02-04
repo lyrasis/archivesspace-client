@@ -46,10 +46,10 @@ module ArchivesSpace
       # create "batch_import", payload, params
     end
 
-    def digital_object_to_xml(digital_object, format = "dublin_core")
+    def digital_object_to_xml(digital_object, format = "dublin_core", options = {})
       id   = digital_object["uri"].split("/")[-1]
       path = "digital_objects/#{format}/#{id}.xml"
-      get_xml path
+      get_xml path, options
     end
 
     def digital_objects(format = nil, options = {}, &block)
@@ -121,10 +121,10 @@ module ArchivesSpace
       #
     end
 
-    def resource_to_xml(resource, format = "ead")
+    def resource_to_xml(resource, format = "ead", options = {})
       id   = resource["uri"].split("/")[-1]
       path = format == "ead" ? "resource_descriptions/#{id}.xml" : "resources/#{format}/#{id}.xml"
-      get_xml path
+      get_xml path, options
     end
 
     def resources(format = nil, options = {}, &block)
@@ -156,9 +156,9 @@ module ArchivesSpace
 
     private
 
-    def get_xml(path)
+    def get_xml(path, options = {})
       # add xml headers
-      response = get(path)
+      response = get(path, options)
       raise RequestError.new path unless response.status_code == 200
       Nokogiri::XML(response.body).to_xml
     end
