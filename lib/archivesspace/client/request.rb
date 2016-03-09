@@ -26,7 +26,7 @@ module ArchivesSpace
       @path    = path
 
       @options = options
-      @options[:headers]    = options[:headers] ? default_headers(@method).merge(options[:headers]) : default_headers
+      @options[:headers]    = options[:headers] ? default_headers(@method).merge(options[:headers]) : default_headers(@method)
       @options[:verify]     = config.verify_ssl
       @options[:query]      = {} unless options.has_key? :query
 
