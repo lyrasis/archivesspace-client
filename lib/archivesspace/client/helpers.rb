@@ -24,13 +24,13 @@ module ArchivesSpace
       # options[:headers] -- add xml headers if format
 
       result = get(path, options.merge({ query: { all_ids: true } } ))
-      raise RequestError.new result.status if result.status_code != 200
+      raise RequestError.new(result.body) if result.status_code != 200
       ids    = result.parsed
       ids    = ids.map{ |object| object["uri"].split("/")[-1] } if parse_id
       ids.each do |id|
         path_with_id = format ? "#{format}/#{id}.xml" : "#{path}/#{id}"
         result = get(path_with_id, options)
-        raise RequestError.new result.status if result.status_code != 200
+        raise RequestError.new(result.body) if result.status_code != 200
         record = format ? Nokogiri::XML(result.body).to_xml : result.parsed
         yield record if block_given?
         all << record
@@ -106,7 +106,7 @@ module ArchivesSpace
 
     def password_reset(username, password)
       user = all('users').find { |u| u["username"] == username }
-      raise RequestError.new user.status unless user
+      raise RequestError.new(user.status) unless user
       post(user["uri"], user, { password: password })
     end
 
@@ -159,7 +159,7 @@ module ArchivesSpace
     def get_xml(path, options = {})
       # add xml headers
       response = get(path, options)
-      raise RequestError.new path unless response.status_code == 200
+      raise RequestError.new(response.body) unless response.status_code == 200
       Nokogiri::XML(response.body).to_xml
     end
 
