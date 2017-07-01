@@ -20,12 +20,12 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "rspec"
-  spec.add_development_dependency "vcr"
-  spec.add_development_dependency "webmock"
-  spec.add_development_dependency "awesome_print"
+  spec.add_development_dependency "rspec", "3.6.0"
+  spec.add_development_dependency "vcr", "3.0.3"
+  spec.add_development_dependency "webmock", "3.0.1"
+  spec.add_development_dependency "awesome_print", "~> 1.8.0"
 
-  spec.add_dependency "httparty"
-  spec.add_dependency "json"
-  spec.add_dependency "nokogiri"
+  spec.add_dependency "httparty", "0.14.0"
+  spec.add_dependency "json", "2.0.3"
+  spec.add_dependency "nokogiri", "1.6.8.1"
 end
