@@ -10,6 +10,6 @@ client = ArchivesSpace::Client.new.login
 begin
   client.password_reset username, password
   puts "Successfully updated password for #{username}."
-rescue Exception => e
-  puts "Failed to update password for #{username},\n#{e.message}"
+rescue Exception => ex
+  puts "Failed to update password for #{username},\n#{ex.message}"
 end

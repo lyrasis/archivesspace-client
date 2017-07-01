@@ -2,7 +2,16 @@ $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'awesome_print'
 require 'archivesspace/client'
 
-# default client connection: localhost:8089, admin, admin
-client = ArchivesSpace::Client.new.login
+# official sandbox
+config = ArchivesSpace::Configuration.new({
+  base_uri: "http://sandbox.archivesspace.org/api",
+  base_repo: "",
+  username: "admin",
+  password: "admin",
+  page_size: 50,
+  throttle: 0,
+  verify_ssl: false,
+})
 
-# todo ... example of assignment using CSV
+client = ArchivesSpace::Client.new(config).login
+puts client.get("version").body

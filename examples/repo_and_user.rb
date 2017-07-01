@@ -13,28 +13,34 @@ repo_data = {
   agent_contact_name: "John Doe",
 }
 
-repository = ArchivesSpace::Template.process_template(:repository_with_agent, repo_data)
-response = client.post('/repositories/with_agent', repository)
-if response.status_code == 201
-  repository = client.repositories.find { |r| r["repo_code"] == "XYZ" }
-  ap repository
-  ap client.delete(repository["uri"])
-else
-  ap response.parsed
-end
-
 user_data = {
   username: "lmessi",
   name: "Lionel Messi",
   is_admin: true,
 }
+user_password = "123456"
 
-user = ArchivesSpace::Template.process_template(:user, user_data)
-response = client.post('users', user, { password: "123456" })
-if response.status_code == 201
-  user = client.users.find { |r| r["username"] == "lmessi" }
-  ap user
-  ap client.delete user["uri"]
-else
-  ap response.parsed
+repository = ArchivesSpace::Template.process_template(:repository_with_agent, repo_data)
+
+begin
+  response = client.post('/repositories/with_agent', repository)
+  if response.status_code == 201
+    repository = client.repositories.find { |r| r["repo_code"] == "XYZ" }
+    ap repository
+    ap client.delete(repository["uri"])
+  else
+    ap response.parsed
+  end
+
+  user = ArchivesSpace::Template.process_template(:user, user_data)
+  response = client.post('users', user, { password: user_password })
+  if response.status_code == 201
+    user = client.users.find { |r| r["username"] == "lmessi" }
+    ap user
+    ap client.delete user["uri"]
+  else
+    ap response.parsed
+  end
+rescue ArchivesSpace::RequestError => ex
+  puts ex.message
 end
