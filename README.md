@@ -1,10 +1,8 @@
-Archivesspace Client
-===
+# Archivesspace Client
 
-Interact with ArchivesSpace via its API.
+Interact with ArchivesSpace via the API.
 
-Installation
----
+## Installation
 
 Add this line to your application's Gemfile:
 
@@ -20,10 +18,11 @@ bundle install
 
 Or install it yourself as:
 
-    $ gem install archivesspace-client
+```bash
+gem install archivesspace-client
+```
 
-Usage
----
+## Usage
 
 See the examples directory for a range of use cases.
 
@@ -36,8 +35,6 @@ client = ArchivesSpace::Client.new.login
 ```
 
 **Custom configuration**
-
-To supply custom configuration to client:
 
 ```ruby
 config = ArchivesSpace::Configuration.new({
@@ -90,8 +87,7 @@ client.get('digital_objects') # instead of "repositories/2/digital_objects" etc.
 client.config.base_repo = ""
 ```
 
-Development
----
+## Development
 
 To run the examples start a local instance of ArchivesSpace then:
 
@@ -99,7 +95,9 @@ To run the examples start a local instance of ArchivesSpace then:
 bundle exec ruby examples/repo_and_user.rb
 ```
 
-Any script placed in the examples directory with a `my_` prefix are ignored by git. Follow the convention used by the existing scripts to bootstrap and experiment away.
+Any script placed in the examples directory with a `my_` prefix are ignored by
+git. Follow the convention used by the existing scripts to bootstrap and
+experiment away.
 
 To run the tests:
 
@@ -107,13 +105,23 @@ To run the tests:
 bundle exec rake
 ```
 
-Contributing
----
+## Publishing
+
+Bump version in `lib/archivesspace/client/version.rb` then:
+
+```bash
+VERSION=0.1.4
+gem build archivesspace-client
+gem push archivesspace-client-$VERSION.gem
+git tag v$VERSION
+git push --tags
+```
+
+## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/lyrasis/archivesspace-client.
 
-License
----
+## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
 
