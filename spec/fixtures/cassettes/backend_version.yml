@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: post
-    uri: http://localhost:8089//users/admin/login?password=admin
+    uri: http://localhost:8089/users/admin/login?password=admin
     body:
       encoding: UTF-8
       string: ''
