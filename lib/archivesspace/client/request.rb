@@ -23,7 +23,7 @@ module ArchivesSpace
     def initialize(config, method = "GET", path = "", options = {})
       @config  = config
       @method  = method.downcase.to_sym
-      @path    = path
+      @path    = path.gsub(/^\/+/, '')
 
       @options = options
       @options[:headers]    = options[:headers] ? default_headers(@method).merge(options[:headers]) : default_headers(@method)
