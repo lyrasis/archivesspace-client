@@ -110,7 +110,7 @@ bundle exec rake
 Bump version in `lib/archivesspace/client/version.rb` then:
 
 ```bash
-VERSION=0.1.4
+VERSION=0.1.5
 gem build archivesspace-client
 gem push archivesspace-client-$VERSION.gem
 git tag v$VERSION
