@@ -10,32 +10,37 @@ module ArchivesSpace
 
   module Helpers
 
-    def accessions(options = {}, &block)
-      records = all('accessions', options) do |record|
-        yield record if block_given?
-      end
-      records
+    def accessions(options = {})
+      all('accessions', options)
     end
 
-    def all(path, options = {}, &block)
-      all      = []
-      format   = options.delete(:format)
-      parse_id = options.delete(:parse_id)
-      # options[:headers] -- add xml headers if format
+    def all(path, options = {})
+      Enumerator.new do |yielder|
+        page = 1
+        unlimited_listing = false
+        loop do
+          result = get(path, options.merge(query: { page: page }))
+          results = []
 
-      result = get(path, options.merge({ query: { all_ids: true } } ))
-      raise RequestError.new(result.body) if result.status_code != 200
-      ids    = result.parsed
-      ids    = ids.map{ |object| object["uri"].split("/")[-1] } if parse_id
-      ids.each do |id|
-        path_with_id = format ? "#{format}/#{id}.xml" : "#{path}/#{id}"
-        result = get(path_with_id, options)
-        raise RequestError.new(result.body) if result.status_code != 200
-        record = format ? Nokogiri::XML(result.body).to_xml : result.parsed
-        yield record if block_given?
-        all << record
-      end
-      all
+          if result.parsed.respond_to?(:key) && result.parsed.key?('results')
+            results = result.parsed['results']
+          else
+            results = result.parsed
+            unlimited_listing = true
+          end
+
+          if results.any?
+            results.each do |i|
+              yielder << i
+            end
+            raise StopIteration if unlimited_listing
+
+            page += 1
+          else
+            raise StopIteration
+          end
+        end
+      end.lazy
     end
 
     def backend_version
@@ -46,31 +51,17 @@ module ArchivesSpace
       # create "batch_import", payload, params
     end
 
-    def digital_object_to_xml(digital_object, format = "dublin_core", options = {})
-      id   = digital_object["uri"].split("/")[-1]
-      path = "digital_objects/#{format}/#{id}.xml"
-      get_xml path, options
+    def digital_objects(options = {})
+      all('digital_objects', options)
     end
 
-    def digital_objects(format = nil, options = {}, &block)
-      path    = "digital_objects"
-      format  = format ? "#{path}/#{format}" : nil
-      records = all(path, options.merge({ format: format })) do |record|
-        yield record if block_given?
-      end
-      records
-    end
-
-    def groups
-      records = all('groups', { parse_id: true }) do |record|
-        yield record if block_given?
-      end
-      records
+    def groups(options = {})
+      all('groups', options)
     end
 
     def group_user_assignment(users_with_roles, params = { with_members: true })
       updated = []
-      groups do |group|
+      groups.each do |group|
         changed = false
 
         users_with_roles.each do |user, roles|
@@ -110,57 +101,24 @@ module ArchivesSpace
       post(user["uri"], user, { password: password })
     end
 
-    def repositories
-      records = get('repositories').parsed.each do |record|
-        yield record if block_given?
-      end
-      records
+    def repositories(options = {})
+      all('repositories', options)
     end
 
     def repositories_with_agent
       #
     end
 
-    def resource_to_xml(resource, format = "ead", options = {})
-      id   = resource["uri"].split("/")[-1]
-      path = format == "ead" ? "resource_descriptions/#{id}.xml" : "resources/#{format}/#{id}.xml"
-      get_xml path, options
-    end
-
-    def resources(format = nil, options = {}, &block)
-      path = 'resources'
-      # the api is inconsistent with the path structure for resource ead (and pdf)
-      if format
-        if format =~ /(ead|pdf)/
-          format = "resource_descriptions"
-        else
-          format = "#{path}/#{format}"
-        end
-      end
-      records = all(path, options.merge({ format: format })) do |record|
-        yield record if block_given?
-      end
-      records
+    def resources(options = {})
+      all('resources', options)
     end
 
     def search(params)
       # get "search", params
     end
 
-    def users
-      records = all('users') do |record|
-        yield record if block_given?
-      end
-      records
-    end
-
-    private
-
-    def get_xml(path, options = {})
-      # add xml headers
-      response = get(path, options)
-      raise RequestError.new(response.body) unless response.status_code == 200
-      Nokogiri::XML(response.body).to_xml
+    def users(options = {})
+      all('users', options)
     end
 
   end

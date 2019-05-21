@@ -19,10 +19,13 @@ client.config.base_repo = "repositories/2"
 
 begin
   # date -d '2015-07-01 00:00:00' +'%s' # 1435734000
-  client.resources("ead", { query: { modified_since: "1435734000" } }) do |ead|
+  client.resources.each(query: { modified_since: "1435734000"}) do |resource|
     # for now we are just printing ...
     # but you would actually write to a zip file or whatever
-    ap ead
+    id   = resource['uri'].split('/')[-1]
+    opts = { include_unpublished: false }
+    response = client.get("resource_descriptions/#{id}.xml", opts)
+    puts Nokogiri::XML(response.body).to_xml
   end
 rescue ArchivesSpace::RequestError => ex
   puts ex.message

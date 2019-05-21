@@ -6,7 +6,9 @@ module ArchivesSpace
     attr_reader   :config
 
     def initialize(config = Configuration.new)
-      raise "Invalid configuration object" unless config.kind_of? ArchivesSpace::Configuration
+      unless config.kind_of? ArchivesSpace::Configuration
+        raise "Invalid configuration object"
+      end
       @config = config
       @token  = nil
     end
