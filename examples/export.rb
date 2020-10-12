@@ -26,6 +26,7 @@ begin
     opts = { include_unpublished: false }
     response = client.get("resource_descriptions/#{id}.xml", opts)
     puts Nokogiri::XML(response.body).to_xml
+    break
   end
 rescue ArchivesSpace::RequestError => ex
   puts ex.message

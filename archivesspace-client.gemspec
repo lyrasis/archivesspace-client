@@ -27,5 +27,5 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "httparty", "0.14.0"
   spec.add_dependency "json", "2.0.3"
-  spec.add_dependency "nokogiri", "1.6.8.1"
+  spec.add_dependency "nokogiri", "1.10.10"
 end
