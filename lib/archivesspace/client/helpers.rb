@@ -19,7 +19,9 @@ module ArchivesSpace
         page = 1
         unlimited_listing = false
         loop do
-          result = get(path, options.merge(query: { page: page }))
+          options[:query] ||= {}
+          options[:query][:page] = page
+          result = get(path, options)
           results = []
 
           if result.parsed.respond_to?(:key) && result.parsed.key?('results')

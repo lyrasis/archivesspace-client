@@ -7,7 +7,7 @@ require 'archivesspace/client'
 # official sandbox
 config = ArchivesSpace::Configuration.new(
   {
-    base_uri: 'http://sandbox.archivesspace.org/api',
+    base_uri: 'http://test.archivesspace.org/staff/api',
     base_repo: '',
     username: 'admin',
     password: 'admin',
@@ -22,15 +22,14 @@ client.config.throttle = 0.5
 client.config.base_repo = 'repositories/2'
 
 begin
-  # date -d '2015-07-01 00:00:00' +'%s' # 1435734000
-  client.resources.each(query: { modified_since: '1435734000' }) do |resource|
+  # date -d '2021-02-01 00:00:00' +'%s' # 1612166400
+  client.resources(query: { modified_since: '1612166400' }).each do |resource|
     # for now we are just printing ...
     # but you would actually write to a zip file or whatever
     id   = resource['uri'].split('/')[-1]
     opts = { include_unpublished: false }
     response = client.get("resource_descriptions/#{id}.xml", opts)
     puts Nokogiri::XML(response.body).to_xml
-    break
   end
 rescue ArchivesSpace::RequestError => e
   puts e.message
