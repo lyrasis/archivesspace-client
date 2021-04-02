@@ -30,9 +30,7 @@ module ArchivesSpace
       @options[:verify]  = config.verify_ssl
       @options[:query]   = {} unless options.key? :query
 
-      base_uri =
-        (config.base_repo.nil? || config.base_repo.empty?)
-       ? config.base_uri : "#{config.base_uri}/#{config.base_repo}"
+      base_uri = config.base_repo&.length&.positive? ? File.join(config.base_uri, config.base_repo) : config.base_uri
 
       self.class.base_uri base_uri
     end
