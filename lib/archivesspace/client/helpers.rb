@@ -1,15 +1,15 @@
+# frozen_string_literal: true
+
 # needed for roundtrip hash merging
 class ::Hash
   def deep_merge(second)
-    merger = proc { |key, v1, v2| Hash === v1 && Hash === v2 ? v1.merge(v2, &merger) : v2 }
-    self.merge(second, &merger)
+    merger = proc { |_key, v1, v2| Hash === v1 && Hash === v2 ? v1.merge(v2, &merger) : v2 }
+    merge(second, &merger)
   end
 end
 
 module ArchivesSpace
-
   module Helpers
-
     def accessions(options = {})
       all('accessions', options)
     end
@@ -44,7 +44,7 @@ module ArchivesSpace
     end
 
     def backend_version
-      get "version"
+      get 'version'
     end
 
     def batch_import(payload, params = {})
@@ -65,49 +65,52 @@ module ArchivesSpace
         changed = false
 
         users_with_roles.each do |user, roles|
-          if roles.include? group["group_code"]
-            unless group["member_usernames"].include? user
-              group["member_usernames"] << user
+          if roles.include? group['group_code']
+            unless group['member_usernames'].include? user
+              group['member_usernames'] << user
               changed = true
             end
           else
-            if group["member_usernames"].include? user
-              group["member_usernames"].delete user
+            if group['member_usernames'].include? user
+              group['member_usernames'].delete user
               changed = true
             end
           end
         end
 
-        if changed
-          id = group["uri"].split("/")[-1]
-          response = post( "/groups/#{id}", group, params )
-          updated << response.parsed
-        end
+        next unless changed
+
+        id = group['uri'].split('/')[-1]
+        response = post("/groups/#{id}", group, params)
+        updated << response.parsed
       end
       updated
     end
 
     def login
-      username, password = config.username, config.password
+      username = config.username
+      password = config.password
       result = request('POST', "/users/#{username}/login", { query: { password: password } })
-      raise ConnectionError.new "Failed to connect to ArchivesSpace backend as #{username} #{password}" unless result.parsed["session"]
-      @token = result.parsed["session"]
+      unless result.parsed['session']
+        raise ConnectionError, "Failed to connect to ArchivesSpace backend as #{username} #{password}"
+      end
+
+      @token = result.parsed['session']
       self
     end
 
     def password_reset(username, password)
-      user = all('users').find { |u| u["username"] == username }
-      raise RequestError.new(user.status) unless user
-      post(user["uri"], user, { password: password })
+      user = all('users').find { |u| u['username'] == username }
+      raise RequestError, user.status unless user
+
+      post(user['uri'], user, { password: password })
     end
 
     def repositories(options = {})
       all('repositories', options)
     end
 
-    def repositories_with_agent
-      #
-    end
+    def repositories_with_agent; end
 
     def resources(options = {})
       all('resources', options)
@@ -120,7 +123,5 @@ module ArchivesSpace
     def users(options = {})
       all('users', options)
     end
-
   end
-
 end
