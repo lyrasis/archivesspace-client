@@ -1,14 +1,14 @@
-module ArchivesSpace
+# frozen_string_literal: true
 
+module ArchivesSpace
   class Client
     include Helpers
     attr_accessor :token
     attr_reader   :config
 
     def initialize(config = Configuration.new)
-      unless config.kind_of? ArchivesSpace::Configuration
-        raise "Invalid configuration object"
-      end
+      raise 'Invalid configuration object' unless config.is_a? ArchivesSpace::Configuration
+
       @config = config
       @token  = nil
     end
@@ -33,11 +33,9 @@ module ArchivesSpace
 
     def request(method, path, options = {})
       sleep config.throttle
-      options[:headers] = { "X-ArchivesSpace-Session" => token } if token
+      options[:headers] = { 'X-ArchivesSpace-Session' => token } if token
       result = Request.new(config, method, path, options).execute
       Response.new result
     end
-
   end
-
 end

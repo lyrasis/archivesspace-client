@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe ArchivesSpace::Configuration do
-
   it 'uses the default profile for configuration settings' do
     config = ArchivesSpace::Configuration.new
     expect(config.base_uri).to eq DEFAULT_BASE_URI
@@ -9,8 +10,8 @@ describe ArchivesSpace::Configuration do
 
   it 'allows configuration settings to be provided' do
     config = ArchivesSpace::Configuration.new({
-      base_uri: CUSTOM_BASE_URI,
-    })
+                                                base_uri: CUSTOM_BASE_URI
+                                              })
     expect(config.base_uri).to eq CUSTOM_BASE_URI
   end
 
@@ -22,7 +23,6 @@ describe ArchivesSpace::Configuration do
 
   it 'ignores unrecognized configuration properties' do
     config = ArchivesSpace::Configuration.new({ xyz: 123 })
-    expect{ config.xyz }.to raise_error(NoMethodError)
+    expect { config.xyz }.to raise_error(NoMethodError)
   end
-
 end
