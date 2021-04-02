@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "webmock", "3.0.1"
   spec.add_development_dependency "awesome_print", "~> 1.8.0"
 
-  spec.add_dependency "httparty", "0.14.0"
-  spec.add_dependency "json", "2.0.3"
-  spec.add_dependency "nokogiri", "1.10.10"
+  spec.add_dependency "httparty", "~> 0.14"
+  spec.add_dependency "json", "~> 2.0"
+  spec.add_dependency "nokogiri", "~> 1.10"
 end
