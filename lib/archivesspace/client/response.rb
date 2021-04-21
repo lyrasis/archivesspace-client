@@ -2,10 +2,9 @@
 
 module ArchivesSpace
   class Response
-    attr_reader :result, :parsed, :body, :headers, :status, :status_code, :xml
+    attr_reader :result, :parsed, :body, :headers, :status, :status_code
 
     def initialize(result)
-      # throw error
       @result      = result
       @parsed      = result.parsed_response
       @body        = result.body
