@@ -87,6 +87,35 @@ client.get('digital_objects') # instead of "repositories/2/digital_objects" etc.
 client.config.base_repo = ""
 ```
 
+## Templates
+
+Templates are an optional feature that can help simplify the effort of creating
+json payloads for ArchivesSpace. Rather than construct the json programatically
+according to the schemas a `.erb` template can be used to generate payloads
+instead which are transformed to json automatically. There are a small number of
+templates provided with the client, but you can create your own and access them
+by setting the `ARCHIVESSPACE_CLIENT_TEMPLATES_PATH` envvar. A particularly simple
+template might look like:
+
+```erb
+{
+  "digital_object_id": "<%= data[:digital_object_id] %>",
+  "title": "<%= data[:title] %>"
+}
+```
+
+Practically speaking there isn't much benefit to this example, but in the case of
+a more complex record structure where you want to populate deeply nested elements
+using a flat file structure (like csv) this can be a very convenient way of
+assembling the payload. To process a template:
+
+```ruby
+data = { repo_code: 'ABC', name: 'ABC Archive', agent_contact_name: 'ABC Admin' }
+json = ArchivesSpace::Template.process(:repository_with_agent, data)
+response = client.post('/repositories/with_agent', json)
+puts response.result.success? ? '=)' : '=('
+```
+
 ## Development
 
 To run the examples start a local instance of ArchivesSpace then:

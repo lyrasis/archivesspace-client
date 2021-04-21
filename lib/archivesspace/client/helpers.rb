@@ -49,9 +49,9 @@ module ArchivesSpace
       get 'version'
     end
 
-    def batch_import(payload, params = {})
-      # create "batch_import", payload, params
-    end
+    # def batch_import(payload, params = {})
+    #   # TODO: create "batch_import", payload, params
+    # end
 
     def digital_objects(options = {})
       all('digital_objects', options)
@@ -118,9 +118,9 @@ module ArchivesSpace
       all('resources', options)
     end
 
-    def search(params)
-      # get "search", params
-    end
+    # def search(params)
+    #   # TODO: get "search", params
+    # end
 
     def users(options = {})
       all('users', options)
