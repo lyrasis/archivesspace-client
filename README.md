@@ -139,7 +139,7 @@ bundle exec rake
 Bump version in `lib/archivesspace/client/version.rb` then:
 
 ```bash
-VERSION=0.1.7
+VERSION=0.1.8
 gem build archivesspace-client
 git add . && git commit -m "Bump to $VERSION"
 git tag v$VERSION
