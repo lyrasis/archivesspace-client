@@ -61,30 +61,30 @@ module ArchivesSpace
       all('groups', options)
     end
 
-    def group_user_assignment(users_with_roles, params = { with_members: true })
+    def group_user_assignment(users_with_roles)
       updated = []
       groups.each do |group|
-        changed = false
+        group = get("groups/#{uri_to_id(group['uri'])}").parsed
+        update = false
 
         users_with_roles.each do |user, roles|
-          if roles.include? group['group_code']
-            unless group['member_usernames'].include? user
-              group['member_usernames'] << user
-              changed = true
-            end
-          else
-            if group['member_usernames'].include? user
+          # should the user still belong to this group?
+          if group['member_usernames'].include?(user)
+            unless roles.include? group['group_code']
               group['member_usernames'].delete user
-              changed = true
+              update = true
             end
+          # should the user be added to this group?
+          elsif roles.include? group['group_code']
+            group['member_usernames'] << user
+            update = true
           end
         end
 
-        next unless changed
+        next unless update
 
-        id = group['uri'].split('/')[-1]
-        response = post("/groups/#{id}", group, params)
-        updated << response.parsed
+        response = post("/groups/#{uri_to_id(group['uri'])}", group.to_json)
+        updated << response
       end
       updated
     end
@@ -105,7 +105,7 @@ module ArchivesSpace
       user = all('users').find { |u| u['username'] == username }
       raise RequestError, user.status unless user
 
-      post(user['uri'], user, { password: password })
+      post(user['uri'], user.to_json, { password: password })
     end
 
     def repositories(options = {})
@@ -121,6 +121,10 @@ module ArchivesSpace
     # def search(params)
     #   # TODO: get "search", params
     # end
+
+    def uri_to_id(uri)
+      uri.split('/').last
+    end
 
     def users(options = {})
       all('users', options)

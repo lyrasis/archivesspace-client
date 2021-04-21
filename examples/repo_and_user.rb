@@ -17,7 +17,6 @@ config = ArchivesSpace::Configuration.new(
   }
 )
 
-# default client connection: localhost:8089, admin, admin
 client = ArchivesSpace::Client.new(config).login
 
 ap ArchivesSpace::Template.list # view available templates
