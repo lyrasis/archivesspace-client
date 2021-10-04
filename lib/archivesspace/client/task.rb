@@ -36,13 +36,16 @@ module ArchivesSpace
     end
 
     def login
-      username = config.username
-      password = config.password
+      username  = config.username
+      password  = config.password
+      base_repo = config.base_repo
+      use_global_repository # ensure we're in the global scope to login
       result = request('POST', "/users/#{username}/login", { query: { password: password } })
       unless result.parsed['session']
         raise ConnectionError, "Failed to connect to ArchivesSpace backend as #{username} #{password}"
       end
 
+      config.base_repo = base_repo # reset repo as set by the cfg
       @token = result.parsed['session']
       self
     end

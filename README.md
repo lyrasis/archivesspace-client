@@ -118,6 +118,29 @@ response = client.post('/repositories/with_agent', json)
 puts response.result.success? ? '=)' : '=('
 ```
 
+## CLI
+
+Create an `~/.asclientrc` file with a json version of the client configuration:
+
+```json
+{
+  "base_uri": "https://archives.university.edu/api",
+  "base_repo": "",
+  "username": "admin",
+  "password": "123456",
+  "page_size": 50,
+  "throttle": 0,
+  "verify_ssl": false
+}
+```
+
+Run commands:
+
+```bash
+# when using locally via the repo prefix commands with ./exe/ i.e. ./exe/asclient -v
+asclient -v
+```
+
 ## Development
 
 To run the examples start a local instance of ArchivesSpace then:
