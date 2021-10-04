@@ -6,6 +6,7 @@ module ArchivesSpace
       {
         base_uri: 'http://localhost:8089',
         base_repo: '',
+        debug: false,
         username: 'admin',
         password: 'admin',
         page_size: 50,
