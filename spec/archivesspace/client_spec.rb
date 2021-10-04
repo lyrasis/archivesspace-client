@@ -22,6 +22,57 @@ describe ArchivesSpace::Client do
     end
   end
 
+  describe 'Repository scoping' do
+    it 'will set the repository with an integer id' do
+      client = ArchivesSpace::Client.new
+      client.repository 2
+      expect(client.config.base_repo).to eq 'repositories/2'
+    end
+
+    it 'will set the repository with a string id cast to integer' do
+      client = ArchivesSpace::Client.new
+      client.repository '2'
+      expect(client.config.base_repo).to eq 'repositories/2'
+    end
+
+    it 'will fail if the id cannot be cast to integer' do
+      client = ArchivesSpace::Client.new
+      expect { client.repository('xyz') }.to raise_error(
+        ArchivesSpace::RepositoryIdError
+      )
+    end
+
+    it 'will use the global repo if repository is passed nil' do
+      client = ArchivesSpace::Client.new
+      client.repository 2
+      client.repository nil
+      expect(client.config.base_repo).to eq ''
+    end
+
+    it 'will use the global repo when the method is called' do
+      client = ArchivesSpace::Client.new
+      client.repository 2
+      client.use_global_repository
+      expect(client.config.base_repo).to eq ''
+    end
+  end
+
+  describe 'Pagination' do
+    it 'will have a method for defined paginated record types' do
+      client = ArchivesSpace::Client.new
+      ArchivesSpace::Pagination::ENDPOINTS.each do |e|
+        next if e.match?('/')
+
+        expect(client.respond_to?(e.to_sym)).to be true
+      end
+    end
+
+    it 'will have a method for defined paginated record types with multipart path' do
+      client = ArchivesSpace::Client.new
+      expect(client.respond_to?(:people)).to be true
+    end
+  end
+
   describe 'Version information' do
     it 'has a version number' do
       expect(ArchivesSpace::Client::VERSION).not_to be nil
