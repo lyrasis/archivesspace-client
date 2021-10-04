@@ -3,8 +3,27 @@
 module ArchivesSpace
   # Handle API Pagination using enumerator
   module Pagination
-    def accessions(options = {})
-      all('accessions', options)
+    # TODO: get via lookup of endpoints that support pagination? (nice-to-have)
+    ENDPOINTS = %w[
+      accessions
+      agents/corporate_entities
+      agents/families
+      agents/people
+      agents/software
+      archival_objects
+      digital_objects
+      groups
+      repositiories
+      resources
+      subjects
+      users
+    ]
+
+    ENDPOINTS.each do |endpoint|
+      method_name = endpoint.split('/').last # remove prefix
+      define_method(method_name) do |options = {}|
+        all(endpoint, options)
+      end
     end
 
     def all(path, options = {})
@@ -36,32 +55,6 @@ module ArchivesSpace
           end
         end
       end.lazy
-    end
-
-    def archival_objects(options = {})
-      all('archival_objects', options)
-    end
-
-    def digital_objects(options = {})
-      all('digital_objects', options)
-    end
-
-    def groups(options = {})
-      all('groups', options)
-    end
-
-    def repositories(options = {})
-      all('repositories', options)
-    end
-
-    def repositories_with_agent; end
-
-    def resources(options = {})
-      all('resources', options)
-    end
-
-    def users(options = {})
-      all('users', options)
     end
   end
 end

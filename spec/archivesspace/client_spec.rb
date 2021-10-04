@@ -57,6 +57,22 @@ describe ArchivesSpace::Client do
     end
   end
 
+  describe 'Pagination' do
+    it 'will have a method for defined paginated record types' do
+      client = ArchivesSpace::Client.new
+      ArchivesSpace::Pagination::ENDPOINTS.each do |e|
+        next if e.match?('/')
+
+        expect(client.respond_to?(e.to_sym)).to be true
+      end
+    end
+
+    it 'will have a method for defined paginated record types with multipart path' do
+      client = ArchivesSpace::Client.new
+      expect(client.respond_to?(:people)).to be true
+    end
+  end
+
   describe 'Version information' do
     it 'has a version number' do
       expect(ArchivesSpace::Client::VERSION).not_to be nil
