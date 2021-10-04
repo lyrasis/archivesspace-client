@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'dry/cli'
 require 'httparty'
 require 'json'
 require 'nokogiri'
@@ -14,6 +15,11 @@ require 'archivesspace/client/request'
 require 'archivesspace/client/response'
 require 'archivesspace/client/template'
 require 'archivesspace/client/version'
+
+# cli
+require 'archivesspace/client/cli/exec'
+require 'archivesspace/client/cli/version'
+require 'archivesspace/client/cli' # load the registry last
 
 module ArchivesSpace
   class ConnectionError < RuntimeError; end
