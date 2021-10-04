@@ -77,14 +77,16 @@ See `helpers.rb` for more convenience methods such as `client.digital_objects` e
 
 **Setting a repository context**
 
-Update the `base_repo` configuration value to add a repository scope to requests (this is optional).
+Use the `repository` method to add a repository scope to requests (this is optional).
 
 ```ruby
-client.config.base_repo = "repositories/2"
-client.get('digital_objects') # instead of "repositories/2/digital_objects" etc.
+client.repository(2)
+client.get('digital_objects', query: {page: 1}) # instead of "repositories/2/digital_objects" etc.
 
 # to reset
-client.config.base_repo = ""
+client.repository(nil)
+# or
+client.use_global_repository
 ```
 
 ## Templates

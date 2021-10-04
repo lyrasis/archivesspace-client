@@ -2,7 +2,8 @@
 
 module ArchivesSpace
   class Client
-    include Helpers
+    include Pagination
+    include Task
     attr_accessor :token
     attr_reader   :config
 
@@ -11,6 +12,10 @@ module ArchivesSpace
 
       @config = config
       @token  = nil
+    end
+
+    def backend_version
+      get 'version'
     end
 
     def get(path, options = {})
@@ -27,6 +32,26 @@ module ArchivesSpace
 
     def delete(path)
       request 'DELETE', path
+    end
+
+    # Scoping requests
+    def repository(id)
+      if id.nil?
+        use_global_repository
+        return
+      end
+
+      begin
+        Integer(id)
+      rescue StandardError
+        raise RepositoryIdError, "Invalid Repository id: #{id}"
+      end
+
+      @config.base_repo = "repositories/#{id}"
+    end
+
+    def use_global_repository
+      @config.base_repo = ''
     end
 
     private
