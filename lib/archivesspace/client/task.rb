@@ -42,7 +42,7 @@ module ArchivesSpace
       use_global_repository # ensure we're in the global scope to login
       result = request('POST', "/users/#{username}/login", { query: { password: password } })
       unless result.parsed['session']
-        raise ConnectionError, "Failed to connect to ArchivesSpace backend as #{username} #{password}"
+        raise ConnectionError, "API client login failed as user [#{username}], check username and password are correct"
       end
 
       config.base_repo = base_repo # reset repo as set by the cfg
