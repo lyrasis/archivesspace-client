@@ -1,0 +1,42 @@
+name: Publish Gem
+
+on:
+  push:
+    branches:
+      - main
+      - master
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Ruby and install gems
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+          ruby-version: 2.7
+          rubygems: latest
+
+      - name: Release Gem
+        run: |
+          VERSION=$(ruby -e "puts eval(File.read('$GEM_NAME.gemspec')).version")
+          GEM_VERSION=$(gem list --exact --remote $GEM_NAME)
+
+          # Publish to RubyGems.org
+          if [ "${GEM_VERSION}" != "$GEM_NAME (${VERSION})" ]; then
+            gem build $GEM_NAME.gemspec
+            gem push "$GEM_NAME-${VERSION}.gem"
+          fi
+
+          # Create a release tag
+          if ! git ls-remote --tags --exit-code origin v${VERSION}; then
+            git tag v${VERSION}
+            git push --tags
+          fi
+        env:
+          GEM_HOST_API_KEY: "${{ secrets.RUBYGEMS_AUTH_TOKEN }}"
+          GEM_NAME: archivesspace-client

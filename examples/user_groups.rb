@@ -36,7 +36,7 @@ users_with_roles = {
 }
 
 begin
-  client.config.base_repo = "repositories/2"
+  client.config.base_repo = 'repositories/2'
   results = client.group_user_assignment users_with_roles
   ap results.map(&:parsed)
 rescue ArchivesSpace::RequestError => e

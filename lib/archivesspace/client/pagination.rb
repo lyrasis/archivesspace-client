@@ -13,7 +13,7 @@ module ArchivesSpace
       archival_objects
       digital_objects
       groups
-      repositiories
+      repositories
       resources
       subjects
       users

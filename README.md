@@ -161,17 +161,8 @@ bundle exec rake
 
 ## Publishing
 
-Bump version in `lib/archivesspace/client/version.rb` then:
-
-```bash
-VERSION=$NEW_VERSION
-gem build archivesspace-client
-git add . && git commit -m "Bump to $VERSION"
-git tag v$VERSION
-git push origin master
-git push --tags
-gem push archivesspace-client-$VERSION.gem
-```
+When an updated version (`lib/archivesspace/client/version.rb`) is merged into the
+main/master branch a new release will be built and published.
 
 ## Contributing
 
