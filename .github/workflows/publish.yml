@@ -23,7 +23,7 @@ jobs:
 
       - name: Release Gem
         run: |
-          VERSION=$(ruby -e "puts eval(File.read('$GEM_NAME.gemspec')).version")
+          VERSION=$(bundle exec rake version)
           GEM_VERSION=$(gem list --exact --remote $GEM_NAME)
 
           # Publish to RubyGems.org
