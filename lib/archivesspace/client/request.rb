@@ -10,26 +10,26 @@ module ArchivesSpace
         delete: {},
         get: {},
         post: {
-          'Content-Type' => 'application/json',
-          'Content-Length' => 'nnnn'
+          "Content-Type" => "application/json",
+          "Content-Length" => "nnnn"
         },
         put: {
-          'Content-Type' => 'application/json',
-          'Content-Length' => 'nnnn'
+          "Content-Type" => "application/json",
+          "Content-Length" => "nnnn"
         }
       }
       headers[method]
     end
 
-    def initialize(config, method = 'GET', path = '', options = {})
-      @config            = config
-      @method            = method.downcase.to_sym
-      @path              = path.gsub(%r{^/+}, '')
-      @options           = options
+    def initialize(config, method = "GET", path = "", options = {})
+      @config = config
+      @method = method.downcase.to_sym
+      @path = path.gsub(%r{^/+}, "")
+      @options = options
       @options[:headers] =
         options[:headers] ? default_headers(@method).merge(options[:headers]) : default_headers(@method)
-      @options[:verify]  = config.verify_ssl
-      @options[:query]   = {} unless options.key? :query
+      @options[:verify] = config.verify_ssl
+      @options[:query] = {} unless options.key? :query
 
       self.class.debug_output($stdout) if @config.debug
 

@@ -1,8 +1,6 @@
 name: CI
 on: [pull_request]
 
-# TODO: add linters (rubocop)
-
 jobs:
   tests:
     name: Tests
@@ -16,6 +14,10 @@ jobs:
         with:
           bundler-cache: true
           ruby-version: 2.7
+
+      - name: Lint
+        run: |
+          bundle exec standardrb
 
       - name: Run tests
         run: |

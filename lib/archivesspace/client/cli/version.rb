@@ -5,7 +5,7 @@ module ArchivesSpace
     module CLI
       # ArchivesSpace::Client::CLI::Version prints version
       class Version < Dry::CLI::Command
-        desc 'Print ArchivesSpace Client version'
+        desc "Print ArchivesSpace Client version"
 
         def call(*)
           puts ArchivesSpace::Client::VERSION
