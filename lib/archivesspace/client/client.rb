@@ -5,33 +5,33 @@ module ArchivesSpace
     include Pagination
     include Task
     attr_accessor :token
-    attr_reader   :config
+    attr_reader :config
 
     def initialize(config = Configuration.new)
-      raise 'Invalid configuration object' unless config.is_a? ArchivesSpace::Configuration
+      raise "Invalid configuration object" unless config.is_a? ArchivesSpace::Configuration
 
       @config = config
-      @token  = nil
+      @token = nil
     end
 
     def backend_version
-      get 'version'
+      get "version"
     end
 
     def get(path, options = {})
-      request 'GET', path, options
+      request "GET", path, options
     end
 
     def post(path, payload, params = {})
-      request 'POST', path, { body: payload, query: params }
+      request "POST", path, {body: payload, query: params}
     end
 
     def put(path, payload, params = {})
-      request 'PUT', path, { body: payload, query: params }
+      request "PUT", path, {body: payload, query: params}
     end
 
     def delete(path)
-      request 'DELETE', path
+      request "DELETE", path
     end
 
     # Scoping requests
@@ -43,7 +43,7 @@ module ArchivesSpace
 
       begin
         Integer(id)
-      rescue StandardError
+      rescue
         raise RepositoryIdError, "Invalid Repository id: #{id}"
       end
 
@@ -51,14 +51,14 @@ module ArchivesSpace
     end
 
     def use_global_repository
-      @config.base_repo = ''
+      @config.base_repo = ""
     end
 
     private
 
     def request(method, path, options = {})
       sleep config.throttle
-      options[:headers] = { 'X-ArchivesSpace-Session' => token } if token
+      options[:headers] = {"X-ArchivesSpace-Session" => token} if token
       result = Request.new(config, method, path, options).execute
       Response.new result
     end

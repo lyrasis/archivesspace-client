@@ -11,14 +11,14 @@ module ArchivesSpace
       end
 
       def self.find_config
-        config = ENV.fetch('ASCLIENT_CFG', File.join(ENV['HOME'], '.asclientrc'))
+        config = ENV.fetch("ASCLIENT_CFG", File.join(ENV["HOME"], ".asclientrc"))
         raise "Unable to find asclient configuration file at: #{config}" unless File.file?(config)
 
         JSON.parse(File.read(config), symbolize_names: true)
       end
 
-      register 'exec', Exec, aliases: ['e', '-e']
-      register 'version', Version, aliases: ['v', '-v', '--version']
+      register "exec", Exec, aliases: ["e", "-e"]
+      register "version", Version, aliases: ["v", "-v", "--version"]
     end
   end
 end

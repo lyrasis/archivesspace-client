@@ -4,11 +4,11 @@ module ArchivesSpace
   class Configuration
     def defaults
       {
-        base_uri: 'http://localhost:8089',
-        base_repo: '',
+        base_uri: "http://localhost:8089",
+        base_repo: "",
         debug: false,
-        username: 'admin',
-        password: 'admin',
+        username: "admin",
+        password: "admin",
         page_size: 50,
         throttle: 0,
         verify_ssl: true
@@ -18,7 +18,7 @@ module ArchivesSpace
     def initialize(settings = {})
       settings = defaults.merge(settings)
       settings.each do |property, value|
-        next unless defaults.keys.include? property
+        next unless defaults.key?(property)
 
         instance_variable_set("@#{property}", value)
         self.class.send(:attr_accessor, property)

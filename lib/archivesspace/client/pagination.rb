@@ -20,7 +20,7 @@ module ArchivesSpace
     ]
 
     ENDPOINTS.each do |endpoint|
-      method_name = endpoint.split('/').last # remove prefix
+      method_name = endpoint.split("/").last # remove prefix
       define_method(method_name) do |options = {}|
         all(endpoint, options)
       end
@@ -36,8 +36,8 @@ module ArchivesSpace
           result = get(path, options)
           results = []
 
-          if result.parsed.respond_to?(:key) && result.parsed.key?('results')
-            results = result.parsed['results']
+          if result.parsed.respond_to?(:key) && result.parsed.key?("results")
+            results = result.parsed["results"]
           else
             results = result.parsed
             unlimited_listing = true
