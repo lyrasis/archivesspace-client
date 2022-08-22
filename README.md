@@ -73,7 +73,8 @@ user = client.all('users').find { |user| user["username"] == "jdoe" }
 user = client.users.find { |user| user["username"] == "jdoe" }
 ```
 
-See `helpers.rb` for more convenience methods such as `client.digital_objects` etc.
+See `pagination.rb` for endpoints that support record type methods such as
+`client.digital_objects` etc.
 
 **Setting a repository context**
 
