@@ -29,6 +29,7 @@ module ArchivesSpace
       @options[:headers] =
         options[:headers] ? default_headers(@method).merge(options[:headers]) : default_headers(@method)
       @options[:verify] = config.verify_ssl
+      @options[:timeout] = config.timeout
       @options[:query] = {} unless options.key? :query
 
       self.class.debug_output($stdout) if @config.debug

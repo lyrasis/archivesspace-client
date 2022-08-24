@@ -45,6 +45,7 @@ config = ArchivesSpace::Configuration.new({
   page_size: 50,
   throttle: 0,
   verify_ssl: false,
+  timeout: 60
 })
 
 client = ArchivesSpace::Client.new(config).login
@@ -131,6 +132,7 @@ Create an `~/.asclientrc` file with a json version of the client configuration:
   "password": "123456",
   "page_size": 50,
   "throttle": 0,
+  "timeout": 60,
   "verify_ssl": false
 }
 ```
