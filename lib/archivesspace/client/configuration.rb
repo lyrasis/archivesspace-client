@@ -11,7 +11,8 @@ module ArchivesSpace
         password: "admin",
         page_size: 50,
         throttle: 0,
-        verify_ssl: true
+        verify_ssl: true,
+        timeout: 60
       }
     end
 
