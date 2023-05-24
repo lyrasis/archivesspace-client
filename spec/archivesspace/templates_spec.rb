@@ -18,9 +18,15 @@ describe ArchivesSpace::Template do
     ENV.delete("ARCHIVESSPACE_CLIENT_TEMPLATES_PATH")
   end
 
-  it "can process a template" do
+  it "can process an erb template" do
     data = {repo_code: "ABC", name: "ABC Archive", agent_contact_name: "ABC Admin"}
     json = JSON.parse(ArchivesSpace::Template.process(:repository_with_agent, data))
     expect(json["repository"]["repo_code"]).to eq data[:repo_code]
+  end
+
+  it "can process a jbuilder template" do
+    data = {"title" => "Title", "object_number" => "001.001", "description_level" => "collection"}
+    json = JSON.parse(ArchivesSpace::Template.process(:resource, data))
+    expect(json["id_0"]).to eq data["object_number"]
   end
 end
