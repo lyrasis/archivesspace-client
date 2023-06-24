@@ -27,7 +27,7 @@ user_data = {
 
 client.post(
   "users",
-  ArchivesSpace::Template.process(:user, user_data),
+  ArchivesSpace::Template.process("user.json.erb", user_data),
   {password: "123456"}
 )
 

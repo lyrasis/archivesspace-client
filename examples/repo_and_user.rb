@@ -34,7 +34,7 @@ user_data = {
 }
 user_password = "123456"
 
-repository = ArchivesSpace::Template.process(:repository_with_agent, repo_data)
+repository = ArchivesSpace::Template.process("repository_with_agent.json.erb", repo_data)
 
 begin
   response = client.post("/repositories/with_agent", repository)
@@ -46,7 +46,7 @@ begin
     ap response.parsed
   end
 
-  user = ArchivesSpace::Template.process(:user, user_data)
+  user = ArchivesSpace::Template.process("user.json.erb", user_data)
   response = client.post("users", user, {password: user_password})
   if response.result.success?
     user = client.users.find { |r| r["username"] == "lmessi" }
