@@ -4,6 +4,7 @@ require "dry/cli"
 require "httparty"
 require "json"
 require "nokogiri"
+require "jbuilder"
 
 # mixins required first
 require "archivesspace/client/pagination"

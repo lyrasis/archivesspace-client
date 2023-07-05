@@ -95,11 +95,11 @@ client.use_global_repository
 
 Templates are an optional feature that can help simplify the effort of creating
 json payloads for ArchivesSpace. Rather than construct the json programatically
-according to the schemas a `.erb` template can be used to generate payloads
-instead which are transformed to json automatically. There are a small number of
+according to the schemas a template can be used to generate payloads instead which
+are transformed to json automatically. There are a small number of
 templates provided with the client, but you can create your own and access them
 by setting the `ARCHIVESSPACE_CLIENT_TEMPLATES_PATH` envvar. A particularly simple
-template might look like:
+`erb` template might look like:
 
 ```erb
 {
@@ -115,10 +115,12 @@ assembling the payload. To process a template:
 
 ```ruby
 data = { repo_code: 'ABC', name: 'ABC Archive', agent_contact_name: 'ABC Admin' }
-json = ArchivesSpace::Template.process(:repository_with_agent, data)
+json = ArchivesSpace::Template.process("repository_with_agent.json.erb", data)
 response = client.post('/repositories/with_agent', json)
 puts response.result.success? ? '=)' : '=('
 ```
+
+To view available templates use: `ArchivesSpace::Template.list`
 
 ## CLI
 
