@@ -21,7 +21,7 @@ module ArchivesSpace
       settings.each do |property, value|
         next unless defaults.key?(property)
 
-        instance_variable_set("@#{property}", value)
+        instance_variable_set(:"@#{property}", value)
         self.class.send(:attr_accessor, property)
       end
     end

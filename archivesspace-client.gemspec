@@ -18,16 +18,11 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "aruba"
-  spec.add_development_dependency "awesome_print", "~> 1.8.0"
-  spec.add_development_dependency "bundler"
-  spec.add_development_dependency "capybara_discoball"
-  spec.add_development_dependency "cucumber"
-  spec.add_development_dependency "json_spec"
+  spec.add_development_dependency "aruba", "~> 2.0"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "3.6.0"
-  spec.add_development_dependency "rubocop"
-  spec.add_development_dependency "standard"
+  spec.add_development_dependency "rubocop", "1.56"
+  spec.add_development_dependency "standard", "1.31.0"
   spec.add_development_dependency "vcr", "6.2.0"
   spec.add_development_dependency "webmock", "3.19.1"
 
