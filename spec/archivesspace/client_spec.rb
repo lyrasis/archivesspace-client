@@ -4,11 +4,9 @@ require "spec_helper"
 
 describe ArchivesSpace::Client do
   let(:client) { ArchivesSpace::Client.new }
-  let(:login) { -> { client.login } }
 
   describe "Configuration" do
     it "will use the default configuration if none is provided" do
-      client = ArchivesSpace::Client.new
       expect(client.config.base_uri).to eq DEFAULT_BASE_URI
     end
 
@@ -24,42 +22,43 @@ describe ArchivesSpace::Client do
 
   describe "Repository scoping" do
     it "will set the repository with an integer id" do
-      client = ArchivesSpace::Client.new
       client.repository 2
       expect(client.config.base_repo).to eq "repositories/2"
     end
 
     it "will set the repository with a string id cast to integer" do
-      client = ArchivesSpace::Client.new
       client.repository "2"
       expect(client.config.base_repo).to eq "repositories/2"
     end
 
     it "will fail if the id cannot be cast to integer" do
-      client = ArchivesSpace::Client.new
       expect { client.repository("xyz") }.to raise_error(
         ArchivesSpace::RepositoryIdError
       )
     end
 
     it "will use the global repo if repository is passed nil" do
-      client = ArchivesSpace::Client.new
       client.repository 2
       client.repository nil
       expect(client.config.base_repo).to eq ""
     end
 
     it "will use the global repo when the method is called" do
-      client = ArchivesSpace::Client.new
       client.repository 2
       client.use_global_repository
       expect(client.config.base_repo).to eq ""
     end
   end
 
+  describe "Requests" do
+    it "will have an identifiable user agent" do
+      request = ArchivesSpace::Request.new(client.config)
+      expect(request.options[:headers]["User-Agent"]).to eq "#{ArchivesSpace::Client::NAME}/#{ArchivesSpace::Client::VERSION}"
+    end
+  end
+
   describe "Pagination" do
     it "will have a method for defined paginated record types" do
-      client = ArchivesSpace::Client.new
       ArchivesSpace::Pagination::ENDPOINTS.each do |e|
         next if e.match?("/")
 
@@ -68,7 +67,6 @@ describe ArchivesSpace::Client do
     end
 
     it "will have a method for defined paginated record types with multipart path" do
-      client = ArchivesSpace::Client.new
       expect(client.respond_to?(:people)).to be true
     end
   end
@@ -80,7 +78,7 @@ describe ArchivesSpace::Client do
 
     it "can retrieve the backend version info" do
       VCR.use_cassette("backend_version") do
-        login.call
+        client.login
         response = client.get "version"
         expect(response.status_code).to eq(200)
         expect(response.body).to match(/ArchivesSpace \(.*\)/)

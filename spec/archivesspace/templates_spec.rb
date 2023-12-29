@@ -12,7 +12,7 @@ describe ArchivesSpace::Template do
 
   it "can change the path when template envvar is set" do
     expect(ArchivesSpace::Template.templates_path).to match(
-      /#{File.join('lib', 'archivesspace', 'client', 'templates')}/
+      /#{File.join("lib", "archivesspace", "client", "templates")}/
     )
     ENV["ARCHIVESSPACE_CLIENT_TEMPLATES_PATH"] = "/path/to/nowhere"
     expect(ArchivesSpace::Template.templates_path).to eq "/path/to/nowhere"
