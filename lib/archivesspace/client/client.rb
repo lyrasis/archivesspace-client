@@ -7,6 +7,8 @@ module ArchivesSpace
     attr_accessor :token
     attr_reader :config
 
+    NAME = "ArchivesSpaceClient"
+
     def initialize(config = Configuration.new)
       raise "Invalid configuration object" unless config.is_a? ArchivesSpace::Configuration
 

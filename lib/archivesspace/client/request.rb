@@ -28,6 +28,7 @@ module ArchivesSpace
       @options = options
       @options[:headers] =
         options[:headers] ? default_headers(@method).merge(options[:headers]) : default_headers(@method)
+      @options[:headers]["User-Agent"] = "#{Client::NAME}/#{Client::VERSION}"
       @options[:verify] = config.verify_ssl
       @options[:timeout] = config.timeout
       @options[:query] = {} unless options.key? :query
