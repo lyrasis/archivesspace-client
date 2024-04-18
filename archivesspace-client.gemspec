@@ -14,8 +14,9 @@ Gem::Specification.new do |spec|
   spec.homepage = ""
   spec.license = "MIT"
 
+  spec.bindir = "exe"
+  spec.executables = %w[asclient]
   spec.files = `git ls-files -z`.split("\x0")
-  spec.executables = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "aruba", "~> 2.0"
