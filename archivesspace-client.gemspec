@@ -20,7 +20,9 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "aruba", "~> 2.0"
-  spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency "capybara_discoball", "~> 0.1.0"
+  spec.add_development_dependency "json_spec", "~> 1.1", ">= 1.1.5"
+  spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "3.6.0"
   spec.add_development_dependency "rubocop", "1.56"
   spec.add_development_dependency "standard", "1.31.0"

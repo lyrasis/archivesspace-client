@@ -161,7 +161,7 @@ experiment away.
 To run the tests:
 
 ```bash
-bundle exec rspec
+bundle exec rake
 ```
 
 ## Publishing
