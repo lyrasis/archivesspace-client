@@ -1,13 +1,12 @@
+#!/usr/bin/env ruby
 # frozen_string_literal: true
 
-$LOAD_PATH.unshift File.expand_path("../lib", __dir__)
-require "awesome_print"
+require "bundler/setup"
 require "archivesspace/client"
 
-# official sandbox
 config = ArchivesSpace::Configuration.new(
   {
-    base_uri: "https://sandbox.archivesspace.org/api",
+    base_uri: "https://test.archivesspace.org/staff/api",
     base_repo: "",
     username: "admin",
     password: "admin",
@@ -16,6 +15,7 @@ config = ArchivesSpace::Configuration.new(
     verify_ssl: false
   }
 )
+@client = ArchivesSpace::Client.new(config).login
 
-client = ArchivesSpace::Client.new(config).login
-puts client.get("version").body
+require "irb"
+IRB.start(__FILE__)

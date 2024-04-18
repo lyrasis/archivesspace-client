@@ -7,7 +7,7 @@ require "archivesspace/client"
 # official sandbox
 config = ArchivesSpace::Configuration.new(
   {
-    base_uri: "http://test.archivesspace.org/staff/api",
+    base_uri: "https://test.archivesspace.org/staff/api",
     base_repo: "",
     username: "admin",
     password: "admin",
