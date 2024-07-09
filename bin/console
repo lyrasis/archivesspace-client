@@ -5,15 +5,7 @@ require "bundler/setup"
 require "archivesspace/client"
 
 config = ArchivesSpace::Configuration.new(
-  {
-    base_uri: "https://test.archivesspace.org/staff/api",
-    base_repo: "",
-    username: "admin",
-    password: "admin",
-    page_size: 50,
-    throttle: 0,
-    verify_ssl: false
-  }
+  ArchivesSpace::Client::CLI.find_config
 )
 @client = ArchivesSpace::Client.new(config).login
 
