@@ -38,7 +38,7 @@ client = ArchivesSpace::Client.new.login
 
 ```ruby
 config = ArchivesSpace::Configuration.new({
-  base_uri: "https://archives.university.edu/api",
+  base_uri: "https://archives.university.edu/staff/api",
   base_repo: "",
   username: "admin",
   password: "123456",
@@ -128,7 +128,7 @@ Create an `~/.asclientrc` file with a json version of the client configuration:
 
 ```json
 {
-  "base_uri": "https://archives.university.edu/api",
+  "base_uri": "https://archives.university.edu/staff/api",
   "base_repo": "",
   "username": "admin",
   "password": "123456",
