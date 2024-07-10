@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
 $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
-require "awesome_print"
 require "archivesspace/client"
 
 # official sandbox
 config = ArchivesSpace::Configuration.new(
   {
-    base_uri: "https://sandbox.archivesspace.org/api",
+    base_uri: "https://sandbox.archivesspace.org/staff/api",
     base_repo: "",
     username: "admin",
     password: "admin",
@@ -19,17 +18,13 @@ config = ArchivesSpace::Configuration.new(
 
 client = ArchivesSpace::Client.new(config).login
 
-user_data = {
+user_data = ArchivesSpace::Template.process("user.json.erb", {
   username: "bde",
   name: "BDE",
   is_admin: false
-}
+})
 
-client.post(
-  "users",
-  ArchivesSpace::Template.process("user.json.erb", user_data),
-  {password: "123456"}
-)
+client.post("users", user_data, {password: "123456"})
 
 users_with_roles = {
   "bde" => ["repository-basic-data-entry"]
@@ -38,7 +33,7 @@ users_with_roles = {
 begin
   client.config.base_repo = "repositories/2"
   results = client.group_user_assignment users_with_roles
-  ap results.map(&:parsed)
+  puts results.map(&:parsed)
 rescue ArchivesSpace::RequestError => e
   puts e.message
 end

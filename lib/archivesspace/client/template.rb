@@ -50,7 +50,7 @@ module ArchivesSpace
       def process
         t = ERB.new(read_template)
         r = t.result(binding).squeeze("\n")
-        JSON.parse(r).to_json
+        JSON.parse(r)
       end
     end
 
@@ -60,9 +60,9 @@ module ArchivesSpace
       end
 
       def process
-        ::Jbuilder.encode do |json|
+        ::Jbuilder.new do |json|
           eval(read_template, binding) # standard:disable Security/Eval
-        end
+        end.attributes!
       end
     end
   end

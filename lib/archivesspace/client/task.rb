@@ -3,10 +3,6 @@
 module ArchivesSpace
   # Perform specific API tasks
   module Task
-    # def batch_import(payload, params = {})
-    #   # TODO: create "batch_import", payload, params
-    # end
-
     def group_user_assignment(users_with_roles)
       updated = []
       groups.each do |group|
@@ -29,7 +25,7 @@ module ArchivesSpace
 
         next unless update
 
-        response = post("/groups/#{uri_to_id(group["uri"])}", group.to_json)
+        response = post("/groups/#{uri_to_id(group["uri"])}", group)
         updated << response
       end
       updated
@@ -54,12 +50,8 @@ module ArchivesSpace
       user = all("users").find { |u| u["username"] == username }
       raise RequestError, user.status unless user
 
-      post(user["uri"], user.to_json, {password: password})
+      post(user["uri"], user, {password: password})
     end
-
-    # def search(params)
-    #   # TODO: get "search", params
-    # end
 
     private
 
