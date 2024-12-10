@@ -2,6 +2,26 @@
 
 Interact with ArchivesSpace via the API.
 
+<!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
+
+* [Installation](#installation)
+* [Usage](#usage)
+   + [Configuring a client](#configuring-a-client)
+      - [Default configuration](#default-configuration)
+      - [Custom configuration, on the fly](#custom-configuration-on-the-fly)
+      - [Custom configuration, stored for use with CLI or console](#custom-configuration-stored-for-use-with-cli-or-console)
+   + [Making basic requests](#making-basic-requests)
+   + [Setting a repository context](#setting-a-repository-context)
+* [Templates](#templates)
+* [CLI](#cli)
+* [Console usage](#console-usage)
+* [Development](#development)
+* [Publishing](#publishing)
+* [Contributing](#contributing)
+* [License](#license)
+
+<!-- TOC end -->
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -26,7 +46,9 @@ gem install archivesspace-client
 
 See the examples directory for a range of use cases.
 
-**Default configuration**
+### Configuring a client
+
+#### Default configuration
 
 Create client with default settings (`localhost:8089`, `admin`, `admin`):
 
@@ -34,12 +56,11 @@ Create client with default settings (`localhost:8089`, `admin`, `admin`):
 client = ArchivesSpace::Client.new.login
 ```
 
-**Custom configuration**
+#### Custom configuration, on the fly
 
 ```ruby
 config = ArchivesSpace::Configuration.new({
   base_uri: "https://archives.university.edu/staff/api",
-  base_repo: "",
   username: "admin",
   password: "123456",
   page_size: 50,
@@ -51,7 +72,35 @@ config = ArchivesSpace::Configuration.new({
 client = ArchivesSpace::Client.new(config).login
 ```
 
-**Making basic requests**
+**NOTE:** `ArchivesSpace::Configuration` allows you to set a `base_repo` value as well, but if this value is set in your config at the start, calls to API endpoints that do not include a repository id in the URI may not work correctly. It is recommended you set/unset the client repository as needed during use via the `#repository` method as described below. If you must set `base_repo` in the config used to create your client, note that the value should be like: "repositories/2", and not just the integer repository id.
+
+#### Custom configuration, stored for use with CLI or console
+
+Create a file containing JSON config data like:
+
+```
+{
+  "base_uri": "http://localhost:4567",
+  "username": "admin",
+  "password": "myverysecurepassword",
+  "page_size": 50,
+  "throttle": 0,
+  "timeout": 60,
+  "verify_ssl": false,
+  "debug": true
+}
+```
+
+The CLI and console commands will, by default, look for this stored config at `~/.asclientrc`,
+
+However, you may also set a custom location for the file by setting an ASCLIENT_CFG environment variable. This is handy if you prefer to use [XDG Base Directory Specification](https://xdgbasedirectoryspecification.com/), or have other opinions about where such config should live:
+
+```
+export ASCLIENT_CFG="$HOME/.config/archivesspace/client.json"
+```
+
+
+### Making basic requests
 
 The client responds to the standard request methods:
 
@@ -77,17 +126,33 @@ user = client.users.find { |user| user["username"] == "jdoe" }
 See `pagination.rb` for endpoints that support record type methods such as
 `client.digital_objects` etc.
 
-**Setting a repository context**
+### Setting a repository context
 
 Use the `repository` method to add a repository scope to requests (this is optional).
 
+Instead of doing:
+
+```ruby
+client.get('repositories/2/digital_objects', query: {page: 1})
+```
+
+You can do:
+
 ```ruby
 client.repository(2)
-client.get('digital_objects', query: {page: 1}) # instead of "repositories/2/digital_objects" etc.
+client.get('digital_objects', query: {page: 1})
+```
 
-# to reset
+
+To reset:
+
+```ruby
 client.repository(nil)
-# or
+```
+
+Or:
+
+```ruby
 client.use_global_repository
 ```
 
@@ -124,26 +189,40 @@ To view available templates use: `ArchivesSpace::Template.list`
 
 ## CLI
 
-Create an `~/.asclientrc` file with a json version of the client configuration:
+Create a stored custom configuration to be used with the CLI as described above.
 
-```json
-{
-  "base_uri": "https://archives.university.edu/staff/api",
-  "base_repo": "",
-  "username": "admin",
-  "password": "123456",
-  "page_size": 50,
-  "throttle": 0,
-  "timeout": 60,
-  "verify_ssl": false
-}
-```
+If you installed this client as a gem via the `gem install archivesspace-client` command, you should be able to use the `asclient` command directly.
 
-Run commands:
+If entering `asclient` in your terminal returns an error, you will need to use the CLI from within this repository:
 
 ```bash
-# when using locally via the repo prefix commands with ./exe/ i.e. ./exe/asclient -v
-asclient -v
+cd path/to/archivesspace-client
+./exe/asclient
+```
+
+The `asclient` command is self-documenting and will show you information about the currently supported commands.
+
+To get more detailed usage info on a command:
+
+```bash
+asclient exec -h
+```
+
+## Console usage
+
+Loading this application in console allows you to play around with its functionality interactively.
+
+Create a stored custom configuration to be used with the console as described above. Then:
+
+```bash
+cd path/to/archivesspace-client
+./bin/console
+```
+
+An IRB session opens. Entering the following should give you the backend version of the ArchivesSpace instance your stored custom config points to:
+
+```
+@client.backend_version
 ```
 
 ## Development
