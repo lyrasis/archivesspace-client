@@ -33,5 +33,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "httparty", "~> 0.14"
   spec.add_dependency "json", "~> 2.0"
   spec.add_dependency "nokogiri", "~> 1.10"
-  spec.add_dependency "jbuilder", "~> 2.11.5"
+  spec.add_dependency "jbuilder", "~> 2.12"
 end
