@@ -78,7 +78,7 @@ client = ArchivesSpace::Client.new(config).login
 
 Create a file containing JSON config data like:
 
-```
+```json
 {
   "base_uri": "http://localhost:4567",
   "username": "admin",
@@ -95,10 +95,9 @@ The CLI and console commands will, by default, look for this stored config at `~
 
 However, you may also set a custom location for the file by setting an ASCLIENT_CFG environment variable. This is handy if you prefer to use [XDG Base Directory Specification](https://xdgbasedirectoryspecification.com/), or have other opinions about where such config should live:
 
-```
+```bash
 export ASCLIENT_CFG="$HOME/.config/archivesspace/client.json"
 ```
-
 
 ### Making basic requests
 
@@ -142,7 +141,6 @@ You can do:
 client.repository(2)
 client.get('digital_objects', query: {page: 1})
 ```
-
 
 To reset:
 
@@ -221,7 +219,7 @@ cd path/to/archivesspace-client
 
 An IRB session opens. Entering the following should give you the backend version of the ArchivesSpace instance your stored custom config points to:
 
-```
+```ruby
 @client.backend_version
 ```
 

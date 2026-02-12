@@ -4,6 +4,7 @@ module ArchivesSpace
   class Client
     include Pagination
     include Task
+
     attr_accessor :token
     attr_reader :config
 
