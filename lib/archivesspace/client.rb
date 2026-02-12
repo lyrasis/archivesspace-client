@@ -23,13 +23,13 @@ require "archivesspace/client/cli/version"
 require "archivesspace/client/cli" # load the registry last
 
 module ArchivesSpace
-  class ConnectionError < RuntimeError; end
+  class ConnectionError < StandardError; end
 
-  class ContextError < RuntimeError; end
+  class ContextError < StandardError; end
 
-  class RepositoryIdError < RuntimeError; end
+  class RepositoryIdError < StandardError; end
 
-  class ParamsError < RuntimeError; end
+  class ParamsError < StandardError; end
 
-  class RequestError < RuntimeError; end
+  class RequestError < StandardError; end
 end
