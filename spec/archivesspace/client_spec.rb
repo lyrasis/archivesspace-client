@@ -71,6 +71,15 @@ describe ArchivesSpace::Client do
     end
   end
 
+  describe "Password reset" do
+    it "will raise an error if the user is not found" do
+      allow(client).to receive(:all).with("users").and_return([].lazy)
+      expect { client.password_reset("nonexistent", "newpass") }.to raise_error(
+        ArchivesSpace::RequestError, "User not found: nonexistent"
+      )
+    end
+  end
+
   describe "Version information" do
     it "has a version number" do
       expect(ArchivesSpace::Client::VERSION).not_to be nil
