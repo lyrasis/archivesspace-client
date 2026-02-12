@@ -46,7 +46,7 @@ module ArchivesSpace
 
       begin
         Integer(id)
-      rescue
+      rescue ArgumentError, TypeError
         raise RepositoryIdError, "Invalid Repository id: #{id}"
       end
 

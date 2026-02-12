@@ -37,6 +37,12 @@ describe ArchivesSpace::Client do
       )
     end
 
+    it "will fail if the id is not a valid type" do
+      expect { client.repository([]) }.to raise_error(
+        ArchivesSpace::RepositoryIdError
+      )
+    end
+
     it "will use the global repo if repository is passed nil" do
       client.repository 2
       client.repository nil
