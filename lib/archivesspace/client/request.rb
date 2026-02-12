@@ -11,12 +11,10 @@ module ArchivesSpace
         delete: {},
         get: {},
         post: {
-          "Content-Type" => "application/json",
-          "Content-Length" => "nnnn"
+          "Content-Type" => "application/json"
         },
         put: {
-          "Content-Type" => "application/json",
-          "Content-Length" => "nnnn"
+          "Content-Type" => "application/json"
         }
       }
       headers[method]
