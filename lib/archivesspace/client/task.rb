@@ -48,7 +48,7 @@ module ArchivesSpace
 
     def password_reset(username, password)
       user = all("users").find { |u| u["username"] == username }
-      raise RequestError, user.status unless user
+      raise RequestError, "User not found: #{username}" unless user
 
       post(user["uri"], user, {password: password})
     end

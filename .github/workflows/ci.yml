@@ -3,8 +3,12 @@ on: [pull_request]
 
 jobs:
   tests:
-    name: Tests
+    name: Tests (Ruby ${{ matrix.ruby }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ["3.4", "4.0"]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -12,6 +16,7 @@ jobs:
       - name: Setup Ruby and install gems
         uses: ruby/setup-ruby@v1
         with:
+          ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
 
       - name: Lint

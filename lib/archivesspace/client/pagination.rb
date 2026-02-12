@@ -33,6 +33,7 @@ module ArchivesSpace
         loop do
           options[:query] ||= {}
           options[:query][:page] = page
+          options[:query][:page_size] ||= config.page_size
           result = get(path, options)
           results = []
 

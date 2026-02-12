@@ -3,6 +3,7 @@
 module ArchivesSpace
   class Request
     include HTTParty
+
     attr_reader :config, :headers, :method, :path, :options
 
     def default_headers(method = :get)
@@ -10,12 +11,10 @@ module ArchivesSpace
         delete: {},
         get: {},
         post: {
-          "Content-Type" => "application/json",
-          "Content-Length" => "nnnn"
+          "Content-Type" => "application/json"
         },
         put: {
-          "Content-Type" => "application/json",
-          "Content-Length" => "nnnn"
+          "Content-Type" => "application/json"
         }
       }
       headers[method]

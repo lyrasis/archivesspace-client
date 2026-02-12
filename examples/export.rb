@@ -2,6 +2,7 @@
 
 $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 require "archivesspace/client"
+require "nokogiri"
 
 # official sandbox
 config = ArchivesSpace::Configuration.new(

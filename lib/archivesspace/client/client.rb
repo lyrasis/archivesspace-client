@@ -4,6 +4,7 @@ module ArchivesSpace
   class Client
     include Pagination
     include Task
+
     attr_accessor :token
     attr_reader :config
 
@@ -45,7 +46,7 @@ module ArchivesSpace
 
       begin
         Integer(id)
-      rescue
+      rescue ArgumentError, TypeError
         raise RepositoryIdError, "Invalid Repository id: #{id}"
       end
 

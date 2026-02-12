@@ -37,6 +37,12 @@ describe ArchivesSpace::Client do
       )
     end
 
+    it "will fail if the id is not a valid type" do
+      expect { client.repository([]) }.to raise_error(
+        ArchivesSpace::RepositoryIdError
+      )
+    end
+
     it "will use the global repo if repository is passed nil" do
       client.repository 2
       client.repository nil
@@ -68,6 +74,22 @@ describe ArchivesSpace::Client do
 
     it "will have a method for defined paginated record types with multipart path" do
       expect(client.respond_to?(:people)).to be true
+    end
+
+    it "will pass page_size from configuration to the query" do
+      response = double("response", parsed: {"results" => []})
+      allow(client).to receive(:get).and_return(response)
+      client.all("resources").first
+      expect(client).to have_received(:get).with("resources", hash_including(query: hash_including(page_size: 50)))
+    end
+  end
+
+  describe "Password reset" do
+    it "will raise an error if the user is not found" do
+      allow(client).to receive(:all).with("users").and_return([].lazy)
+      expect { client.password_reset("nonexistent", "newpass") }.to raise_error(
+        ArchivesSpace::RequestError, "User not found: nonexistent"
+      )
     end
   end
 

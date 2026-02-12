@@ -7,7 +7,7 @@ module ArchivesSpace
     end
 
     def self.process(template, data)
-      processor = File.extname(template).delete(".").camelize
+      processor = File.extname(template).delete(".").capitalize
       processor = Object.const_get("ArchivesSpace::Template::#{processor}")
       processor.new(template, data).process
     end
