@@ -75,6 +75,13 @@ describe ArchivesSpace::Client do
     it "will have a method for defined paginated record types with multipart path" do
       expect(client.respond_to?(:people)).to be true
     end
+
+    it "will pass page_size from configuration to the query" do
+      response = double("response", parsed: {"results" => []})
+      allow(client).to receive(:get).and_return(response)
+      client.all("resources").first
+      expect(client).to have_received(:get).with("resources", hash_including(query: hash_including(page_size: 50)))
+    end
   end
 
   describe "Password reset" do
