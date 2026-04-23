@@ -1,4 +1,4 @@
-# Archivesspace Client
+# ArchivesSpace Client
 
 Interact with ArchivesSpace via the API.
 
@@ -6,17 +6,18 @@ Interact with ArchivesSpace via the API.
 
 * [Installation](#installation)
 * [Usage](#usage)
-   + [Configuring a client](#configuring-a-client)
-      - [Default configuration](#default-configuration)
-      - [Custom configuration, on the fly](#custom-configuration-on-the-fly)
-      - [Custom configuration, stored for use with CLI or console](#custom-configuration-stored-for-use-with-cli-or-console)
-   + [Making basic requests](#making-basic-requests)
-   + [Setting a repository context](#setting-a-repository-context)
+  * [Configuring a client](#configuring-a-client)
+    * [Default configuration](#default-configuration)
+    * [Custom configuration, on the fly](#custom-configuration-on-the-fly)
+    * [Custom configuration, stored for use with CLI or console](#custom-configuration-stored-for-use-with-cli-or-console)
+  * [Making basic requests](#making-basic-requests)
+  * [Setting a repository context](#setting-a-repository-context)
 * [Templates](#templates)
 * [CLI](#cli)
 * [Console usage](#console-usage)
 * [Development](#development)
 * [Publishing](#publishing)
+* [Changelog](#changelog)
 * [Contributing](#contributing)
 * [License](#license)
 
@@ -56,7 +57,7 @@ Create client with default settings (`localhost:8089`, `admin`, `admin`):
 client = ArchivesSpace::Client.new.login
 ```
 
-#### Custom configuration, on the fly
+#### Custom configuration
 
 ```ruby
 config = ArchivesSpace::Configuration.new({
@@ -71,8 +72,6 @@ config = ArchivesSpace::Configuration.new({
 
 client = ArchivesSpace::Client.new(config).login
 ```
-
-**NOTE:** `ArchivesSpace::Configuration` allows you to set a `base_repo` value as well, but if this value is set in your config at the start, calls to API endpoints that do not include a repository id in the URI may not work correctly. It is recommended you set/unset the client repository as needed during use via the `#repository` method as described below. If you must set `base_repo` in the config used to create your client, note that the value should be like: "repositories/2", and not just the integer repository id.
 
 #### Custom configuration, stored for use with CLI or console
 
@@ -138,20 +137,33 @@ client.get('repositories/2/digital_objects', query: {page: 1})
 You can do:
 
 ```ruby
+client.repository(2) do
+  client.get('digital_objects', query: {page: 1})
+end
+
+# now back in the global scope
+```
+
+Scopes restore the previous context on exit (even if the block raises) and can
+be nested:
+
+```ruby
+client.repository(2) do
+  client.repository(3) do
+    client.resources  # scoped to repo 3
+  end
+  client.resources    # back to repo 2
+end
+
+# now back in the global scope
+```
+
+You can also set the scope persistently (without a block) and clear it later:
+
+```ruby
 client.repository(2)
-client.get('digital_objects', query: {page: 1})
-```
-
-To reset:
-
-```ruby
-client.repository(nil)
-```
-
-Or:
-
-```ruby
-client.use_global_repository
+client.resources
+client.use_global_repository  # or: client.repository(nil)
 ```
 
 ## Templates
@@ -246,9 +258,26 @@ bundle exec rake
 When an updated version (`lib/archivesspace/client/version.rb`) is merged into the
 main/master branch a new release will be built and published.
 
+## Changelog
+
+### 0.5.0
+
+Breaking changes:
+
+* Removed the `base_repo` configuration option. Use `client.repository(id)` to
+  scope requests to a repository instead, either persistently or with a
+  block that auto-restores the previous scope.
+* `client.repository(id)` with a block now saves and restores the previous
+  context (including when nested or when the block raises), instead of always
+  resetting to the global scope.
+* Login failure now raises `ArchivesSpace::AuthenticationError` (was
+  `ConnectionError`). `ConnectionError` has been removed.
+* `Client.new` raises `ArchivesSpace::ConfigurationError` (was `RuntimeError`)
+  when given a non-`Configuration` argument.
+
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/lyrasis/archivesspace-client.
+Bug reports and pull requests are welcome on GitHub at <https://github.com/lyrasis/archivesspace-client>.
 
 ## License
 

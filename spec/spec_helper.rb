@@ -6,8 +6,8 @@ require "vcr"
 require "webmock/rspec"
 
 # GLOBAL VALUES FOR SPECS
-DEFAULT_BASE_URI = "http://localhost:8089"
 CUSTOM_BASE_URI = "https://archives.university.edu/api"
+DEFAULT_BASE_URI = "http://localhost:8089"
 
 VCR.configure do |c|
   c.cassette_library_dir = "spec/fixtures/cassettes"

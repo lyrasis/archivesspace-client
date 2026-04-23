@@ -7,7 +7,6 @@ require "archivesspace/client"
 config = ArchivesSpace::Configuration.new(
   {
     base_uri: "https://sandbox.archivesspace.org/staff/api",
-    base_repo: "",
     username: "admin",
     password: "admin",
     page_size: 50,
@@ -31,9 +30,10 @@ users_with_roles = {
 }
 
 begin
-  client.config.base_repo = "repositories/2"
-  results = client.group_user_assignment users_with_roles
-  puts results.map(&:parsed)
+  client.repository 2 do
+    results = client.group_user_assignment users_with_roles
+    puts results.map(&:parsed)
+  end
 rescue ArchivesSpace::RequestError => e
   puts e.message
 end

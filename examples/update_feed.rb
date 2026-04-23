@@ -6,7 +6,6 @@ require "archivesspace/client"
 config = ArchivesSpace::Configuration.new(
   {
     base_uri: "https://test.archivesspace.org/staff/api",
-    base_repo: "",
     username: "admin",
     password: "admin",
     page_size: 50,
