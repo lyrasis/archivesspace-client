@@ -260,6 +260,10 @@ main/master branch a new release will be built and published.
 
 ## Changelog
 
+### 0.5.1
+
+* Fix: prevent caller options passed to request from being mutated.
+
 ### 0.5.0
 
 Breaking changes:
