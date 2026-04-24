@@ -14,7 +14,7 @@ module ArchivesSpace
       @method = method.downcase.to_sym
       @path = path.gsub(%r{^/+}, "")
 
-      @options = options
+      @options = options.dup
 
       @options[:headers] = DEFAULT_HEADERS.merge(@options.fetch(:headers, {}))
       @options[:headers]["User-Agent"] = "#{Client::NAME}/#{Client::VERSION}"

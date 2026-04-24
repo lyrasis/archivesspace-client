@@ -158,6 +158,24 @@ describe ArchivesSpace::Client do
       request = ArchivesSpace::Request.new(nil, client.config)
       expect(request.options[:headers]["User-Agent"]).to eq "#{ArchivesSpace::Client::NAME}/#{ArchivesSpace::Client::VERSION}"
     end
+
+    it "does not mutate the caller's options hash" do
+      opts = {query: {foo: "bar"}, headers: {"X-Custom" => "1"}}
+      caller_opts = Marshal.load(Marshal.dump(opts))
+      ArchivesSpace::Request.new(nil, client.config, "GET", "resources", opts)
+      expect(opts).to eq(caller_opts)
+    end
+
+    it "does not mutate the caller's options hash when injecting the session token" do
+      client.token = "abc123"
+      opts = {query: {foo: "bar"}}
+      caller_opts = Marshal.load(Marshal.dump(opts))
+      allow(ArchivesSpace::Request).to receive(:new).and_return(
+        double("request", execute: double("response", status_code: 200))
+      )
+      client.get("resources", opts)
+      expect(opts).to eq(caller_opts)
+    end
   end
 
   describe "URL construction" do
