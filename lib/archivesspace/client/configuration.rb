@@ -2,19 +2,18 @@
 
 module ArchivesSpace
   class Configuration
-    attr_accessor :base_uri, :base_repo, :debug, :username, :password,
-      :page_size, :throttle, :verify_ssl, :timeout
+    attr_accessor :base_uri, :debug, :username, :password,
+      :page_size, :throttle, :timeout, :verify_ssl
 
     DEFAULTS = {
       base_uri: "http://localhost:8089",
-      base_repo: "",
       debug: false,
       username: "admin",
       password: "admin",
       page_size: 50,
       throttle: 0,
-      verify_ssl: true,
-      timeout: 60
+      timeout: 60,
+      verify_ssl: true
     }.freeze
 
     def initialize(settings = {})

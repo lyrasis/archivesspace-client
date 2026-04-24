@@ -34,16 +34,20 @@ module ArchivesSpace
     def login
       username = config.username
       password = config.password
-      base_repo = config.base_repo
-      use_global_repository # ensure we're in the global scope to login
-      result = request("POST", "/users/#{username}/login", {query: {password: password}})
-      unless result.parsed["session"]
-        raise ConnectionError, "API client login failed as user [#{username}], check username and password are correct"
-      end
 
-      config.base_repo = base_repo # reset repo as set by the cfg
-      @token = result.parsed["session"]
-      self
+      previous_context = @context
+      @context = nil
+      begin
+        result = request("POST", "/users/#{username}/login", {query: {password: password}})
+        unless result.parsed["session"]
+          raise AuthenticationError, "Login failed as user [#{username}] (status #{result.status_code}); check username and password"
+        end
+
+        @token = result.parsed["session"]
+        self
+      ensure
+        @context = previous_context
+      end
     end
 
     def password_reset(username, password)

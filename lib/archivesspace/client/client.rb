@@ -6,14 +6,18 @@ module ArchivesSpace
     include Task
 
     attr_accessor :token
-    attr_reader :config
+    attr_reader :config, :context
 
     NAME = "ArchivesSpaceClient"
+    TOKEN = "X-ArchivesSpace-Session"
 
     def initialize(config = Configuration.new)
-      raise "Invalid configuration object" unless config.is_a? ArchivesSpace::Configuration
+      unless config.is_a? ArchivesSpace::Configuration
+        raise ConfigurationError, "expected ArchivesSpace::Configuration, got #{config.class}"
+      end
 
       @config = config
+      @context = nil
       @token = nil
     end
 
@@ -39,10 +43,7 @@ module ArchivesSpace
 
     # Scoping requests
     def repository(id)
-      if id.nil?
-        use_global_repository
-        return
-      end
+      return use_global_repository if id.nil?
 
       begin
         Integer(id)
@@ -50,20 +51,28 @@ module ArchivesSpace
         raise RepositoryIdError, "Invalid Repository id: #{id}"
       end
 
-      @config.base_repo = "repositories/#{id}"
+      new_context = "repositories/#{id}"
+      return @context = new_context unless block_given?
+
+      previous = @context
+      @context = new_context
+      begin
+        yield
+      ensure
+        @context = previous
+      end
     end
 
     def use_global_repository
-      @config.base_repo = ""
+      @context = nil
     end
 
     private
 
     def request(method, path, options = {})
       sleep config.throttle
-      options[:headers] = {"X-ArchivesSpace-Session" => token} if token
-      result = Request.new(config, method, path, options).execute
-      Response.new result
+      options[:headers] = {TOKEN => token} if token
+      Request.new(context, config, method, path, options).execute
     end
   end
 end
