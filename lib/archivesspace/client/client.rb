@@ -71,6 +71,7 @@ module ArchivesSpace
 
     def request(method, path, options = {})
       sleep config.throttle
+      options = options.dup
       options[:headers] = {TOKEN => token} if token
       Request.new(context, config, method, path, options).execute
     end
