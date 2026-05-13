@@ -266,6 +266,11 @@ main/master branch a new release will be built and published.
 
 ## Changelog
 
+### 0.6.0
+
+* Support global scope within a nested context. This makes it much
+  more ergonomic to request uris within a repository context.
+
 ### 0.5.1
 
 * Fix: prevent caller options passed to request from being mutated.
