@@ -141,6 +141,39 @@ describe ArchivesSpace::Client do
       expect(client.context).to eq "repositories/2"
     end
 
+    it "scopes to the global repository within a block and restores afterwards" do
+      client.repository 2
+      client.repository(nil) do
+        expect(client.context).to be_nil
+      end
+      expect(client.context).to eq "repositories/2"
+    end
+
+    it "scopes to the global repository when called with no id and a block" do
+      client.repository 2
+      client.repository do
+        expect(client.context).to be_nil
+      end
+      expect(client.context).to eq "repositories/2"
+    end
+
+    it "nests a no-arg global block inside a repository block and restores both contexts" do
+      client.repository(2) do
+        expect(client.context).to eq "repositories/2"
+        client.repository do
+          expect(client.context).to be_nil
+        end
+        expect(client.context).to eq "repositories/2"
+      end
+      expect(client.context).to be_nil
+    end
+
+    it "restores the previous repository context even if a nil-scoped block raises" do
+      client.repository 2
+      expect { client.repository(nil) { raise "boom" } }.to raise_error("boom")
+      expect(client.context).to eq "repositories/2"
+    end
+
     it "restores the context even if the block raises" do
       expect { client.repository(2) { raise "boom" } }.to raise_error("boom")
       expect(client.context).to be_nil

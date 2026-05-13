@@ -42,17 +42,21 @@ module ArchivesSpace
     end
 
     # Scoping requests
-    def repository(id)
-      return use_global_repository if id.nil?
+    def repository(id = nil)
+      if id.nil?
+        return use_global_repository unless block_given?
 
-      begin
-        Integer(id)
-      rescue ArgumentError, TypeError
-        raise RepositoryIdError, "Invalid Repository id: #{id}"
+        new_context = nil
+      else
+        begin
+          Integer(id)
+        rescue ArgumentError, TypeError
+          raise RepositoryIdError, "Invalid Repository id: #{id}"
+        end
+
+        new_context = "repositories/#{id}"
+        return @context = new_context unless block_given?
       end
-
-      new_context = "repositories/#{id}"
-      return @context = new_context unless block_given?
 
       previous = @context
       @context = new_context
