@@ -145,7 +145,8 @@ end
 ```
 
 Scopes restore the previous context on exit (even if the block raises) and can
-be nested:
+be nested. Call `repository` with no id to nest a global-scope block inside a
+repository scope:
 
 ```ruby
 client.repository(2) do
@@ -153,6 +154,11 @@ client.repository(2) do
     client.resources  # scoped to repo 3
   end
   client.resources    # back to repo 2
+
+  client.repository do
+    client.get('repositories')  # global scope
+  end
+  client.resources    # back to repo 2 again
 end
 
 # now back in the global scope
