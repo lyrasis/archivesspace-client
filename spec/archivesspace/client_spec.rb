@@ -209,6 +209,24 @@ describe ArchivesSpace::Client do
       client.get("resources", opts)
       expect(opts).to eq(caller_opts)
     end
+
+    it "posts a file (as multipart form data) with session token" do
+      client.token = "abc123"
+      stub = stub_request(:post, "#{DEFAULT_BASE_URI}/repositories/2/jobs_with_files")
+        .with { |req|
+          req.headers["Content-Type"].start_with?("multipart/form-data; boundary=") &&
+            req.headers["X-Archivesspace-Session"] == "abc123" &&
+            req.body.include?('name="files[]"; filename="client_spec.rb"') &&
+            req.body.include?('name="job"')
+        }
+        .to_return(status: 200, body: "{}", headers: {"Content-Type" => "application/json"})
+      File.open(__FILE__) do |file|
+        client.repository(2) do
+          client.post_multipart("jobs_with_files", {job: {jsonmodel_type: "job"}.to_json, files: [file]})
+        end
+      end
+      expect(stub).to have_been_requested
+    end
   end
 
   describe "URL construction" do
