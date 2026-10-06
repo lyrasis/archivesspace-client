@@ -222,7 +222,7 @@ describe ArchivesSpace::Client do
         .to_return(status: 200, body: "{}", headers: {"Content-Type" => "application/json"})
       File.open(__FILE__) do |file|
         client.repository(2) do
-          client.post_multipart("jobs_with_files", {job: {jsonmodel_type: "job"}.to_json, files: [file]})
+          client.post_multipart("jobs_with_files", {job: {jsonmodel_type: "job"}, files: [file]})
         end
       end
       expect(stub).to have_been_requested
