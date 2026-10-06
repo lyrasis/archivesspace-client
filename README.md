@@ -4,22 +4,22 @@ Interact with ArchivesSpace via the API.
 
 <!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
 
-* [Installation](#installation)
-* [Usage](#usage)
-  * [Configuring a client](#configuring-a-client)
-    * [Default configuration](#default-configuration)
-    * [Custom configuration, on the fly](#custom-configuration-on-the-fly)
-    * [Custom configuration, stored for use with CLI or console](#custom-configuration-stored-for-use-with-cli-or-console)
-  * [Making basic requests](#making-basic-requests)
-  * [Setting a repository context](#setting-a-repository-context)
-* [Templates](#templates)
-* [CLI](#cli)
-* [Console usage](#console-usage)
-* [Development](#development)
-* [Publishing](#publishing)
-* [Changelog](#changelog)
-* [Contributing](#contributing)
-* [License](#license)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Configuring a client](#configuring-a-client)
+    - [Default configuration](#default-configuration)
+    - [Custom configuration, on the fly](#custom-configuration-on-the-fly)
+    - [Custom configuration, stored for use with CLI or console](#custom-configuration-stored-for-use-with-cli-or-console)
+  - [Making basic requests](#making-basic-requests)
+  - [Setting a repository context](#setting-a-repository-context)
+- [Templates](#templates)
+- [CLI](#cli)
+- [Console usage](#console-usage)
+- [Development](#development)
+- [Publishing](#publishing)
+- [Changelog](#changelog)
+- [Contributing](#contributing)
+- [License](#license)
 
 <!-- TOC end -->
 
@@ -266,28 +266,33 @@ main/master branch a new release will be built and published.
 
 ## Changelog
 
+### 0.7.0
+
+- Add support for multipart POST requests, including file uploads to the
+  `jobs_with_files` endpoint.
+
 ### 0.6.0
 
-* Support global scope within a nested context. This makes it much
+- Support global scope within a nested context. This makes it much
   more ergonomic to request uris within a repository context.
 
 ### 0.5.1
 
-* Fix: prevent caller options passed to request from being mutated.
+- Fix: prevent caller options passed to request from being mutated.
 
 ### 0.5.0
 
 Breaking changes:
 
-* Removed the `base_repo` configuration option. Use `client.repository(id)` to
+- Removed the `base_repo` configuration option. Use `client.repository(id)` to
   scope requests to a repository instead, either persistently or with a
   block that auto-restores the previous scope.
-* `client.repository(id)` with a block now saves and restores the previous
+- `client.repository(id)` with a block now saves and restores the previous
   context (including when nested or when the block raises), instead of always
   resetting to the global scope.
-* Login failure now raises `ArchivesSpace::AuthenticationError` (was
+- Login failure now raises `ArchivesSpace::AuthenticationError` (was
   `ConnectionError`). `ConnectionError` has been removed.
-* `Client.new` raises `ArchivesSpace::ConfigurationError` (was `RuntimeError`)
+- `Client.new` raises `ArchivesSpace::ConfigurationError` (was `RuntimeError`)
   when given a non-`Configuration` argument.
 
 ## Contributing
