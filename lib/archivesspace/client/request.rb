@@ -17,6 +17,7 @@ module ArchivesSpace
       @options = options.dup
 
       @options[:headers] = DEFAULT_HEADERS.merge(@options.fetch(:headers, {}))
+      @options[:headers].delete("Content-Type") if @options[:multipart]
       @options[:headers]["User-Agent"] = "#{Client::NAME}/#{Client::VERSION}"
 
       @options[:verify] = config.verify_ssl

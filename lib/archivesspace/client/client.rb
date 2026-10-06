@@ -33,6 +33,12 @@ module ArchivesSpace
       request "POST", path, {body: payload.to_json, query: params}
     end
 
+    # Allow passing a file object (multipart = true)
+    def post_multipart(path, payload, params = {})
+      body = payload.transform_values { |v| v.is_a?(Hash) ? v.to_json : v }
+      request "POST", path, {body: body, query: params, multipart: true}
+    end
+
     def put(path, payload, params = {})
       request "PUT", path, {body: payload.to_json, query: params}
     end
@@ -76,7 +82,7 @@ module ArchivesSpace
     def request(method, path, options = {})
       sleep config.throttle
       options = options.dup
-      options[:headers] = {TOKEN => token} if token
+      options[:headers] = options.fetch(:headers, {}).merge(TOKEN => token) if token
       Request.new(context, config, method, path, options).execute
     end
   end

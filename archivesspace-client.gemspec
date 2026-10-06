@@ -30,7 +30,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "webmock", "~> 3.24"
 
   spec.add_dependency "dry-cli", "< 2.0"
-  spec.add_dependency "httparty", "~> 0.14"
+  spec.add_dependency "httparty", "~> 0.16"
   spec.add_dependency "json", "~> 2.0"
   spec.add_dependency "jbuilder", "~> 2.12"
 end
